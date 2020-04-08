@@ -1,0 +1,51 @@
+class Solution {
+public:
+    vector<string> helper(string s, int index)
+{
+    if(s.size() == index)
+    {
+        vector<string> base;
+        base.push_back("");
+        return base;
+    }
+
+    vector<string> smallAns = helper(s, index+1);
+
+    vector<string> ans;
+
+    if((s[index] >= 65 && s[index] <= 90))
+    {
+        for(string s1 : smallAns)
+        {
+            ans.push_back(s.substr(index,1) + s1);
+            char c = s[index] + 32;
+            string k(1,c);
+            ans.push_back(k + s1);
+        }
+
+    }
+    else if(s[index] >= 97 && s[index] <= 122)
+    {
+        for(string s1 : smallAns)
+        {
+            ans.push_back(s.substr(index,1) + s1);
+            char c = s[index] - 32;
+            string k(1,c);
+            ans.push_back(k + s1);
+        }
+    }
+    else if(s[index] >= 48 && s[index] <= 57)
+    {
+        for(string s1 : smallAns)
+        {
+            ans.push_back(s.substr(index,1) + s1);
+        }
+    }
+
+    return ans;
+
+}
+    vector<string> letterCasePermutation(string S) {
+       return helper(S,0);
+    }
+};
