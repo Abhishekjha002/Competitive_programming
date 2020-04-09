@@ -1,0 +1,41 @@
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        
+        if(nums.size() == 0)
+        {
+            vector<vector<int>> base;
+            vector<int> b1;
+            base.push_back(b1);
+            return base;
+        }
+        
+        vector<vector<int>> ans;
+        
+        for(int i=0;i<nums.size();i++)
+        {
+            vector<int> pass;
+            for(int j=0;j<i;j++)
+                pass.push_back(nums[j]);
+            for(int j=i+1;j<nums.size();j++)
+                pass.push_back(nums[j]);
+            
+            vector<vector<int>> smallAns = permute(pass);
+            
+            for(int k=0;k<smallAns.size();k++)
+            {
+                vector<int> v1;
+                v1.push_back(nums[i]);
+                for(int j=0;j<smallAns[k].size();j++)
+                {
+                    v1.push_back(smallAns[k][j]);
+                }
+                ans.push_back(v1);
+            }
+            
+        }
+        
+        return ans;
+
+    }
+};
