@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int helper(string s, string ans)
+    {
+        if(s.size() == 0)
+        {
+            //cout<<ans<<"\n";
+            return 1;
+        }
+        //cout<<ans<<"\n";
+        int check[26] = {0};
+
+        int c = 1;
+        int k = 0;
+        for(int i=0;i<s.size();i++)
+        {
+            int fc = s[i] - 'A';
+            if(!check[fc])
+            {
+                
+                check[fc] = 1;
+                string z = s.substr(0,i) + s.substr(i+1);
+                c += helper(z,ans+s[i]);
+            }
+        }
+
+        return c;
+}
+    int numTilePossibilities(string tiles) {
+        int ans = helper(tiles,"") - 1;
+        return ans;
+    }
+};
