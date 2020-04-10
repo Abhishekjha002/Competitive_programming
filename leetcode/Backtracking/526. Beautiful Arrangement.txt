@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int countTotal(int N, vector<int>& visited,int position)
+    {
+        if(position > N)
+        {
+            return 1;
+        }
+        int c = 0;
+        for(int i=1;i<=N;i++)
+        {
+            if(!visited[i] && (position%i == 0 || i%position == 0))
+            {
+                visited[i] = 1;
+                c += countTotal(N,visited,position+1);
+                visited[i] = 0;
+            }
+        }
+        return c;
+    }
+    int countArrangement(int N) {
+        
+        vector<int> visited(N+1,0);
+        return countTotal(N,visited,1);
+    }
+};
