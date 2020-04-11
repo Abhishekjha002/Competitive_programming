@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int factorial(int n)
+    {
+        if(n == 0)
+            return 1;
+        return n*factorial(n-1);
+    }
+    int helper(int n)
+    {
+        int k1 = 9*factorial(9);
+        int k2 = factorial(10-n);
+        int k3 = k1/k2;
+        return k3;
+    }
+    int countNumbersWithUniqueDigits(int n) {
+
+    vector<int> dp(10,0);
+        dp[0] = 1;
+    for(int i=1;i<10;i++)
+    {
+        dp[i] = helper(i);
+    }
+    vector<int> s(10,0);
+    s[0] = dp[0];
+    for(int i=1;i<10;i++)
+        s[i] = dp[i] + s[i-1];
+
+     return s[n];
+    }
+};
