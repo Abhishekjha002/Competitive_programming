@@ -1,0 +1,26 @@
+class Solution {
+public:
+    void helper(int n,int o, int c,vector<string>& ans,string s)
+    {
+        if(o == n && c == n)
+        {
+            ans.push_back(s);
+            return;
+        }
+        if(o < n)
+        {
+            helper(n,o+1,c,ans,s+"(");
+        }
+        if(c < o)
+        {
+            helper(n,o,c+1,ans,s+")");
+        }
+        
+    }
+    
+    vector<string> generateParenthesis(int n) {
+        vector<string> ans;
+        helper(n,0,0,ans,"");
+        return ans;
+    }
+};
