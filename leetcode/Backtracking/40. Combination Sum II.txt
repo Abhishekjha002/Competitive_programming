@@ -1,0 +1,42 @@
+class Solution {
+public:
+    void helper(vector<int>& arr, vector<vector<int>>& ans,vector<int>& temp,int total,int index)
+    {
+       if(total == 0)
+       {
+           vector<int> v = temp;
+           sort(v.begin(),v.end());
+           int f = 0;
+           for(vector<int> v1 : ans)
+           {
+               if(v1 == v)
+               {
+                   f++;
+                   break;
+               }
+           }
+           if(f == 0)
+            ans.push_back(v);
+           return;
+       }
+
+       for(int i=index;i<arr.size();i++)
+       {
+           if(total-arr[i] >= 0)
+           {
+               temp.push_back(arr[i]);
+               helper(arr,ans,temp,total-arr[i],i+1);
+               temp.pop_back();
+           }
+       }
+       return;
+
+    }
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        
+        vector<vector<int>> ans;
+        vector<int> temp;
+        helper(candidates,ans,temp,target,0);
+        return ans;
+    }
+};
