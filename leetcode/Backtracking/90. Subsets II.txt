@@ -1,0 +1,36 @@
+class Solution {
+public:
+    void helper(vector<int>& arr,int index,vector<vector<int>>& ans,vector<int>& temp)
+    {
+        if(index == arr.size())
+        {
+            int f = 0;
+            for(vector<int> v : ans)
+            {
+                if(v == temp)
+                {
+                    f++;
+                    break;
+                }
+            }
+            if(f == 0)
+                ans.push_back(temp);
+            return;
+        }
+
+        temp.push_back(arr[index]);
+        helper(arr,index+1,ans,temp);
+        temp.pop_back();
+
+        helper(arr,index+1,ans,temp);
+    }
+
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        vector<vector<int>> ans;
+        vector<int> temp;
+        helper(nums,0,ans,temp);
+        return ans;
+
+    }
+};
