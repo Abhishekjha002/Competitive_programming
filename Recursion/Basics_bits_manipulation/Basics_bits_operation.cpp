@@ -32,11 +32,27 @@ int KthOnToOFF(int num, int k) // on -> oFF and off -> off
     int mask = (~(1 << k));
     return (num & mask);
 }
+int countSetBits(int n)
+{
+    int bitCount = 0;
+    int totalBits = 32;
+    while(totalBits != 0 && n != 0)
+    {
+        if((n&1) != 0)
+        {
+            bitCount++;
+        }
+        n >>= 1;
+        totalBits--;
+    }
+    return bitCount;
+}
 void solve()
 {
     //basics();
     //cout<<KthOFFToON(13,1);
-    cout<<KthOnToOFF(13,2);
+    //cout<<KthOnToOFF(13,2);
+    cout<<countSetBits(726);
 }
 int main()
 {
