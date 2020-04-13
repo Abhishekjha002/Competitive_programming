@@ -1,0 +1,16 @@
+class Solution {
+public:
+    int hammingWeight(uint32_t num) {
+        
+    int bitCount = 0;
+
+    while(num != 0)
+    {
+        num &= (num-1);
+        bitCount++;
+    }
+    return bitCount;
+        
+        
+    }
+};
