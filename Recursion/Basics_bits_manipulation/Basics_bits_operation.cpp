@@ -32,7 +32,7 @@ int KthOnToOFF(int num, int k) // on -> oFF and off -> off
     int mask = (~(1 << k));
     return (num & mask);
 }
-int countSetBits(int n)
+int countSetBits(unsigned int n)
 {
     int bitCount = 0;
     int totalBits = 32;
