@@ -22,9 +22,21 @@ void basics()
     cout<<y<<"\n";
     
 }
+int KthOFFToON(int num, int k) // on -> on and off -> on
+{
+    unsigned int mask = (1<<k);
+    return (num | mask);
+}
+int KthOnToOFF(int num, int k) // on -> oFF and off -> off
+{
+    int mask = (~(1 << k));
+    return (num & mask);
+}
 void solve()
 {
-    basics();
+    //basics();
+    //cout<<KthOFFToON(13,1);
+    cout<<KthOnToOFF(13,2);
 }
 int main()
 {
