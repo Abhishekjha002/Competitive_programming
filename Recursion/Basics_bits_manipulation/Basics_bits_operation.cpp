@@ -47,12 +47,24 @@ int countSetBits(unsigned int n)
     }
     return bitCount;
 }
+int countSetBits01(unsigned int num)
+{
+    int bitCount = 0;
+
+    while(num != 0)
+    {
+        num &= (num-1);
+        bitCount++;
+    }
+    return bitCount;
+}
 void solve()
 {
     //basics();
     //cout<<KthOFFToON(13,1);
     //cout<<KthOnToOFF(13,2);
-    cout<<countSetBits(726);
+    //cout<<countSetBits(726);
+    cout<<countSetBits01(1016);
 }
 int main()
 {
