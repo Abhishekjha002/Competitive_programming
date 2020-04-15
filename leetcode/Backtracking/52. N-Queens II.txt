@@ -1,0 +1,45 @@
+class Solution {
+public:
+    int rowA = 0;
+    int colA = 0;
+    int diag = 0;
+    int aDiag = 0;
+    int totalpossibleways(int n,int index,int qp)
+    {
+        if(qp == n)
+        {
+            return 1;
+        }
+
+        int c = 0;
+        for(int i=index;i<n*n;i++)
+        {
+            int x = i/n;
+            int y = i%n;
+
+            if(!(rowA & (1 << x)) && !(colA & (1 << y)) && !(diag & (1 << (x - y + n - 1))) && !(aDiag & (1 << (x + y))))
+            {
+                rowA ^= (1 << x);
+                colA ^= (1 << y);
+                diag ^= (1 << (x - y + n - 1));
+                aDiag ^= (1 << (x + y));
+
+                c += totalpossibleways(n,i+1,qp+1);
+
+                rowA ^= (1 << x);
+                colA ^= (1 << y);
+                diag ^= (1 << (x - y + n - 1));
+                aDiag ^= (1 << (x + y));
+            }
+        }
+
+        return c;
+
+    }
+
+
+    
+    int totalNQueens(int n) {
+        return totalpossibleways(n,0,0);   
+    }
+};
