@@ -1,0 +1,35 @@
+class Solution {
+public:
+    void helper(vector<int> & arr,vector<int>& visited,vector<int>& temp,vector<vector<int>>& ans)
+    {
+        if(temp.size() == arr.size())
+        {
+            ans.push_back(temp);
+            return;
+        }
+        
+        vector<int> check;
+        for(int i=0;i<arr.size();i++)
+        {
+            auto it = std::find (check.begin(), check.end(), arr[i]); 
+            if(!visited[i] && it == check.end())
+            {
+                check.push_back(arr[i]);
+                temp.push_back(arr[i]);
+                visited[i] = 1;
+                helper(arr,visited,temp,ans);
+                temp.pop_back();
+                visited[i] = 0;
+            }
+        }
+        return;
+        
+    }
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        vector<vector<int>> ans;
+        vector<int> temp;
+        vector<int> visited(nums.size(),0);
+        helper(nums,visited,temp,ans);
+        return ans;
+    }
+};
