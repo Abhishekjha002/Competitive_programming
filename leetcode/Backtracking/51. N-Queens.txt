@@ -1,0 +1,75 @@
+class Solution {
+public:
+    int rowA = 0;
+    int colA = 0;
+    int diag = 0;
+    int aDiag = 0;
+    void findAllPath(int n,int index,string var,vector<string>& ans,int tqp)
+    {
+        if(tqp == n)
+        {
+            if(var.size() != n*n)
+            {
+                while(var.size()!=n*n)
+                    var.push_back('.');
+            }
+            ans.push_back(var);
+            return;
+        }
+
+        int c = 0;
+        for(int i= index;i<n*n;i++)
+        {
+            int x = i/n;
+            int y = i%n;
+
+            if( !(rowA & (1 << x)) && !(colA & (1 << y)) && !(diag & (1 << (x - y + n-1))) && !(aDiag & (1 << (x + y))))
+            {
+                rowA ^= (1 << x);
+                colA ^= (1 << y);
+                diag ^= (1 << (x - y + n-1));
+                aDiag ^= (1 << (x + y));
+
+                findAllPath(n,i+1,var+'Q',ans,tqp+1);
+
+                rowA ^= (1 << x);
+                colA ^= (1 << y);
+                diag ^= (1 << (x - y + n-1));
+                aDiag ^= (1 << (x + y));
+            }
+            var += '.';
+        }
+        return;
+    }
+    vector<vector<string>> solveNQueens(int n) {
+        if(n == 1)
+        {
+            vector<vector<string>> arr(1,vector<string>(1,"Q"));
+            return arr;
+        }
+        vector<string> ans;
+        findAllPath(n,0,"",ans,0);
+
+        vector<vector<string>> arr;
+        for(string s : ans)
+        {
+            string s1 = "";
+            vector<string> small;
+            int k = 0;
+            for(int i=0;i<s.size();i++)
+            {
+                s1 += s[i];
+                k++;
+                if(k == n)
+                {
+                    //cout<<s1<<"\n";
+                    small.push_back(s1);
+                    s1 = "";
+                    k = 0;
+                }
+            }
+            arr.push_back(small);
+        }
+        return arr;
+    }
+};
