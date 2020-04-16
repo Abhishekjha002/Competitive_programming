@@ -1,0 +1,82 @@
+class Solution {
+public:
+    vector<vector<int>> dirN = {{0,-1},{0,1},{-1,0},{1,0}};
+bool isValid(int x,int y,vector<vector<int>>& grid, vector<vector<int>>& visited,int total,int temp)
+{
+    if(x >= 0 && y >= 0 && x < grid.size() && y < grid[0].size() && visited[x][y] != 1)
+    {
+        if(grid[x][y] == -1)
+            return 0;
+        if(grid[x][y] == 0)
+            return 1;
+        if(grid[x][y] == 2)
+        {
+            if(temp != total)
+                return 0;
+            else
+                return 1;
+        }
+    }
+    return 0;
+}
+int helper(int x,int y,vector<vector<int>>& grid, vector<vector<int>>& visited,string ans,int total,int temp)
+{
+    if(grid[x][y] == 2 && temp-1 == total)
+    {
+        //cout<<ans<<"\n";
+        return 1;
+    }
+
+    int count = 0;
+    visited[x][y] = 1;
+    //cout<<ans<<" "<<temp<<"\n";
+    for(int d=0;d<dirN.size();d++)
+    {
+        int r = x + dirN[d][0];
+        int c = y + dirN[d][1];
+        if(isValid(r,c,grid,visited,total,temp))
+        {
+            count += helper(r,c,grid,visited,ans+"("+to_string(x)+","+to_string(y)+")",total,temp+1);
+        }
+    }
+    visited[x][y] = 0;
+    return count;
+}
+
+int uniquePathsIII(vector<vector<int>>& grid) {
+
+    
+    int n = grid.size();
+    int m = grid[0].size();
+    
+    int total = 0;
+    int x,y;
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<m;j++)
+        {
+            if(grid[i][j] == 0)
+                total += 1;
+        }
+    }
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<m;j++)
+        {
+            if(grid[i][j] == 1)
+            {
+                x = i;
+                y = j;
+                break;
+            }
+        }
+    }
+
+    vector<vector<int>> visited(n,vector<int>(m,0));
+
+    int ans = 0;
+    visited[x][y] = 1;
+    ans += helper(x,y,grid,visited,"",total,0);
+    return ans;
+}
+};
