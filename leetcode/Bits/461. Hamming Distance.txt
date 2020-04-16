@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int hammingDistance(int x, int y) {
+        
+        int count = 0;
+        
+        for(int i=0;i<32;i++)
+        {
+            int mask = (1 << i);
+        
+            int k1 = (x & mask);
+            int k2 = (y & mask);
+            
+            if(k1 != k2)
+                count++;
+        
+        }
+        
+        return count;
+        
+    }
+};
