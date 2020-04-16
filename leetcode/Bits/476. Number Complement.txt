@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int findComplement(int num) {
+        
+        int number = 0;
+
+        int i = 0;
+
+        while(num != 0)
+        {
+            int k = ((num ^ 1) & 1);
+            number |= (k << i);
+            num = (num >> 1);
+            i++;
+
+        }
+        
+        return number;
+        
+    }
+};
