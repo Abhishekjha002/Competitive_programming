@@ -1,0 +1,31 @@
+class Solution {
+public:
+    bool hasAlternatingBits(int n) {
+
+    if(n == 1)
+        return 1;
+
+    int prevBits = -1;
+    while(n != 0)
+    {
+        int currBits = (n & 1);
+
+        if(currBits != prevBits)
+        {
+            prevBits = currBits;
+        }
+        else
+            break;
+
+
+        n = (n >> 1);
+    }
+
+
+    if(n != 0)
+        return 0;
+    else
+        return 1;
+
+}
+};
