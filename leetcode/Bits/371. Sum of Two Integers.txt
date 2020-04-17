@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int getSum(int a, int b) {
+        
+        int sum = a;
+
+        while(b != 0)
+        {
+            int carry = ((a & b) & 0x7fffffff);
+
+            sum = (sum ^ b);
+
+            b = (carry << 1);
+
+            a = sum;
+        }
+
+        return sum;
+        }
+};
