@@ -1,0 +1,35 @@
+class Solution {
+public: 
+    bool isValidSudoku(vector<vector<char>>& board) {
+       
+        vector<int> row(9,0);
+        vector<int> col(9,0);
+        vector<vector<int>> mat(3,vector<int>(3,0));
+        
+        int n = board.size();
+        int m = board[0].size();
+        
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<m;j++)
+            {
+                if(board[i][j] != '.')
+                {
+                    int x = board[i][j] - 48;
+                    int mask = (1 << x);
+                    if(!(row[i] & mask) && !(col[j] & mask) && !(mat[i/3][j/3] & mask))
+                    {
+                        row[i] ^= mask;
+                        col[j] ^= mask;
+                        mat[i/3][j/3] ^= mask;
+                    }
+                    else
+                        return false;
+                }
+            }
+        }
+        
+        return true;
+        
+    }
+};
