@@ -146,28 +146,31 @@ void hamintonianPath(int src, int osrc, vector<bool>& visited, int count, string
     visited[src] = false;
     return;
 }
-void GCC_(int src, vector<bool>& visited)
+int GCC_(int src, vector<bool>& visited)
 {
+    int count = 0;
     visited[src] = true;
     for(Edge e : graph[src])
     {
         if(!visited[e.v])
-            GCC_(e.v,visited);
+            count += GCC_(e.v,visited);
     }
+    return count + 1;
 }
 void GCC()
 {
     vector<bool> visited(N,false);
     int count = 0;
+    int maxSize = 0;
     for(int i=0;i<visited.size();i++)
     {
         if(!visited[i])
         {
             count++;
-            GCC_(i,visited);
+            maxSize = max(maxSize,GCC_(i,visited));
         }
     }
-    cout << count;
+    cout << count << "\n" <<maxSize;
 }
 
 
