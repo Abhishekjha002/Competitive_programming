@@ -75,11 +75,11 @@ void constructGraph()
     addEdge(graph, 0, 3, 10);
     addEdge(graph, 1, 2, 10);
     addEdge(graph, 2, 3, 40);
-    addEdge(graph, 3, 4, 2);
+    //addEdge(graph, 3, 4, 2);
     addEdge(graph, 4, 5, 2);
     addEdge(graph, 4, 6, 3);
     addEdge(graph, 5, 6, 8);
-    addEdge(graph, 2, 5, 2);
+    //addEdge(graph, 2, 5, 2);
 }
 bool hasPath(int src, int des, vector<bool>& visited)
 {
@@ -146,6 +146,31 @@ void hamintonianPath(int src, int osrc, vector<bool>& visited, int count, string
     visited[src] = false;
     return;
 }
+void GCC_(int src, vector<bool>& visited)
+{
+    visited[src] = true;
+    for(Edge e : graph[src])
+    {
+        if(!visited[e.v])
+            GCC_(e.v,visited);
+    }
+}
+void GCC()
+{
+    vector<bool> visited(N,false);
+    int count = 0;
+    for(int i=0;i<visited.size();i++)
+    {
+        if(!visited[i])
+        {
+            count++;
+            GCC_(i,visited);
+        }
+    }
+    cout << count;
+}
+
+
 void solve()
 {
     constructGraph();
@@ -155,7 +180,8 @@ void solve()
     //allSolutionPair pair;
     //allSolution(0,6,visited,0,pair,20);
     //cout << pair.lightW << " " << pair.heavyW << " " << pair.ceilV << " " << pair.floorV;
-    hamintonianPath(2,2,visited,0,"");
+    //hamintonianPath(2,2,visited,0,"");
+    GCC();
 }
 int main()
 {
