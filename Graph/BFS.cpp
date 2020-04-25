@@ -337,7 +337,7 @@ void BFS_04(int src, vector<bool>& visited)
 
 
 }
-/////////////////////////If cycle is not your concern///////////////////////
+/////////////////////////If cycle is not your concern -> never put same element in queue///////////////////////
 void BFS_05(int src,vector<bool>& visited)
 {
     queue<int> que;
