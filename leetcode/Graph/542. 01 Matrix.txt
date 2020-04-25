@@ -1,0 +1,59 @@
+class Solution {
+public:
+    vector<vector<int>> dirN = {{-1,0},{0,-1},{1,0},{0,1}};
+    vector<vector<int>> updateMatrix(vector<vector<int>>& matrix) {
+        
+        if(matrix.size() == 0 || matrix[0].size() == 0)
+        {
+            vector<vector<int>> base;
+            return base;
+        }
+        
+        int n = matrix.size();
+        int m = matrix[0].size();
+        
+        vector<vector<int>> grid(n,vector<int>(m,0));
+        
+        queue<int> que;
+        
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<m;j++)
+            {
+                if(matrix[i][j] == 0)
+                {
+                    que.push(i*m+j);
+                }
+            }
+        }
+        
+        int level = 0;
+        while(que.size() != 0)
+        {
+            int size = que.size();
+            while(size--)
+            {
+                int ridx = que.front();
+                que.pop();
+                int x = (ridx/m);
+                int y = (ridx%m);
+                
+                for(int i=0;i<dirN.size();i++)
+                {
+                    int r = x + dirN[i][0];
+                    int c = y + dirN[i][1];
+                    
+                    if(r >= 0 && c >= 0 && r < n && c < m && matrix[r][c] == 1)
+                    {
+                        matrix[r][c] = 0;
+                        grid[r][c] = level + 1;
+                        que.push(r*m + c);
+                    }
+                }
+            }
+            level++;
+        }
+        
+        return grid;
+    }
+};
