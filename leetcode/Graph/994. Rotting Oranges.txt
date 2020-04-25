@@ -1,0 +1,71 @@
+class Solution {
+public:
+    vector<vector<int>> dirN = {{-1,0},{0,-1},{1,0},{0,1}};
+    int orangesRotting(vector<vector<int>>& grid) {
+        
+        if(grid.size() == 0 || grid[0].size() == 0)
+            return -1;
+        
+        
+        int n = grid.size();
+        int m = grid[0].size();
+        
+        queue<int> que;
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<m;j++)
+            {
+                if(grid[i][j] == 2)
+                {
+                    que.push(i*m + j);
+                }
+            }
+        }
+        
+        int level = -1;
+        while(que.size() != 0)
+        {
+            int size = que.size();
+            
+            while(size--)
+            {
+                int ridx = que.front();
+                que.pop();
+                
+                int x = (ridx/m);
+                int y = (ridx%m);
+                
+                for(int i=0;i<dirN.size();i++)
+                {
+                    int r = x + dirN[i][0];
+                    int c = y + dirN[i][1];
+                    
+                    if(r >= 0 && c >= 0 && r < n && c < m && grid[r][c] == 1)
+                    {
+                        grid[r][c] = 2;
+                        que.push(r*m + c);
+                    }
+                }
+    
+            }
+            level++;
+        }
+        
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<m;j++)
+            {
+                if(grid[i][j] == 1)
+                {
+                    return -1;
+                }
+            }
+        }
+        if(level == -1)
+            return 0;
+        else
+            return level;
+        
+    }
+    
+};
