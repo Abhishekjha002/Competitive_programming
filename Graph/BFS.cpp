@@ -295,6 +295,48 @@ void BFS_03(int src, vector<bool>& visited)
     }
 
 }
+
+void BFS_04(int src, vector<bool>& visited)
+{
+    queue<int> que;
+    que.push(src);
+    int level = 0;
+    int des = 6;
+    int cycle = 1;
+
+    while(que.size() != 0)
+    {
+        int size = que.size();
+
+        while(size--)
+        {
+            int rvtx = que.front();
+            que.pop();
+
+            if(visited[rvtx])
+            {
+                cout<<"Cycle no. -> "<<cycle<<". "<<rvtx<<"\n";
+                cycle++;
+                continue;
+            }
+
+            if(rvtx == des)
+            {
+                cout<<"Level -> "<<level<<". "<<rvtx<<"\n";
+            }
+
+            visited[rvtx] = true;
+            for(Edge e : graph[rvtx])
+            {
+                if(!visited[e.v])
+                    que.push(e.v);
+            }
+        }
+        level++;
+    }
+
+
+}
 void solve()
 {
     constructGraph();
@@ -308,7 +350,8 @@ void solve()
     //GCC();
     // BFS_01(0,visited);
     // BFS_02(0,visited);
-    BFS_03(0,visited);
+    // BFS_03(0,visited);
+    BFS_04(0,visited);
 }
 int main()
 {
