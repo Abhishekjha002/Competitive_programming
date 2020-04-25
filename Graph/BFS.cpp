@@ -247,7 +247,52 @@ void BFS_02(int src, vector<bool>& visited)
 
     }
 
+}
 
+class variables{
+    
+    public:
+    int v = 0;
+    string s = "";
+    int level = 0;
+    
+    variables(int v, string s,int level)
+    {
+        this->v = v;
+        this->s = s;
+        this->level = level;
+    }
+};
+
+void BFS_03(int src, vector<bool>& visited)
+{
+    queue<variables> que;
+    que.push({src,to_string(src)+" ",0});
+
+    int des = 6;
+    while(que.size() != 0)
+    {
+        variables rvtx = que.front();
+        que.pop();
+
+        if(visited[rvtx.v])
+        {
+            cout<<"Cycle : "<<rvtx.s<<"\n";
+            continue;
+        }
+        if(rvtx.v == des)
+        {
+            cout<<"Path : "<<rvtx.s<<"\n";
+            cout<<"Level : "<<rvtx.level<<"\n";
+        }
+
+        visited[rvtx.v] = true;
+        for(Edge e : graph[rvtx.v])
+        {
+            if(!visited[e.v])
+                que.push({e.v, rvtx.s + to_string(e.v) + " ",rvtx.level+1});
+        }
+    }
 
 }
 void solve()
@@ -262,7 +307,8 @@ void solve()
     //hamintonianPath(2,2,visited,0,"");
     //GCC();
     // BFS_01(0,visited);
-    BFS_02(0,visited);
+    // BFS_02(0,visited);
+    BFS_03(0,visited);
 }
 int main()
 {
