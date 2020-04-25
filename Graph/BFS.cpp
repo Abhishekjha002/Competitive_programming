@@ -337,6 +337,42 @@ void BFS_04(int src, vector<bool>& visited)
 
 
 }
+/////////////////////////If cycle is not your concern///////////////////////
+void BFS_05(int src,vector<bool>& visited)
+{
+    queue<int> que;
+    que.push(src);
+    int level = 0;
+    int des = 6;
+    int cycle = 1;
+
+    visited[src] = true;
+
+    while(que.size() != 0)
+    {
+        int size = que.size();
+
+        while(size--)
+        {
+            int rvtx = que.front();
+            que.pop();
+
+            if(rvtx == des)
+                cout<<"Level -> "<<level<<". "<<rvtx<<"\n";
+
+            
+            for(Edge e : graph[rvtx])
+            {
+                if(!visited[e.v])
+                {
+                    visited[e.v] = true;
+                    que.push(e.v);
+                }
+            }
+        }
+        level++;
+    }
+}
 void solve()
 {
     constructGraph();
@@ -351,7 +387,8 @@ void solve()
     // BFS_01(0,visited);
     // BFS_02(0,visited);
     // BFS_03(0,visited);
-    BFS_04(0,visited);
+    // BFS_04(0,visited);
+    BFS_05(0,visited);
 }
 int main()
 {
