@@ -203,7 +203,53 @@ void BFS_01(int src, vector<bool>& visited)
     }
     
 }
+// use delimiter
+void BFS_02(int src, vector<bool>& visited)
+{
+    queue<pair<int,string>> que;
+    que.push({src,to_string(src) + " "});
+    que.push({-1,""});
+    int level = 0;
+    int des = 6;
 
+    while(que.size() != 1)
+    {
+        pair<int,string> rvtx = que.front();
+        que.pop();
+
+        if(visited[rvtx.first])
+        {
+            cout<<"Cycle : "<<rvtx.second<<"\n";
+            continue;
+        }
+
+        if(rvtx.first == des)
+        {
+            cout<<"Path : "<<rvtx.second<<"\n";
+            cout<<"Level : "<<level<<"\n";
+        }
+
+        visited[rvtx.first] = true;
+        
+        for(Edge e : graph[rvtx.first])
+        {
+            if(!visited[e.v])
+                que.push({e.v, rvtx.second + to_string(e.v) + " "});
+        }
+
+        pair<int,string> spc = que.front();
+        if(spc.first == -1)
+        {
+            que.pop();
+            que.push({-1,""});
+            level++;
+        }
+
+    }
+
+
+
+}
 void solve()
 {
     constructGraph();
@@ -215,7 +261,8 @@ void solve()
     //cout << pair.lightW << " " << pair.heavyW << " " << pair.ceilV << " " << pair.floorV;
     //hamintonianPath(2,2,visited,0,"");
     //GCC();
-    BFS_01(0,visited);
+    // BFS_01(0,visited);
+    BFS_02(0,visited);
 }
 int main()
 {
