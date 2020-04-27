@@ -97,11 +97,52 @@ void kahn_algo()
     }
     
 }
+bool topologicalSortCycle_(int src, vector<int>& vis, vector<int>& ans)
+{
+    if(vis[src] == 2)   return false; // already visited vertex
+    if(vis[src] == 1)   return true; // cycle
+    
+    vis[src] = 1;
+    bool res = false;
+    for(int e : graph[src])
+    {
+        res = res || topologicalSortCycle_(e,vis,ans);
+    }
+    vis[src] = 2;
+    ans.push_back(src);
+    return res;
+}
+void topologicalSortCycle()
+{
+    vector<int> vis(N,0);
+    vector<int> ans;
+    
+    bool res = false;
+    for(int i=0;i<N && !res;i++)
+    {
+        if(vis[i] == 0)
+            res = res || topologicalSortCycle_(i,vis,ans);
+    }
+    if(res)
+    {
+        cout<<"Cycle\n";
+    }
+    else
+    {
+        for(int i=ans.size()-1;i>=0;i--)
+        {
+            cout<<ans[i]<<" ";
+        }
+        cout<<"\n";
+    }
+    
+}
 void solve()
 {
     makeGraph();
     // TopologySort_01();
-    kahn_algo();
+    //kahn_algo();
+    topologicalSortCycle();
 
 }
 int main()
