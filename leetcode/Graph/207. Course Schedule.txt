@@ -1,0 +1,56 @@
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+     
+        if(numCourses == 0)
+            return 1;
+        if(prerequisites.size() == 0)
+            return 1;
+        
+        int n = numCourses;
+        vector<vector<int>> graph(n,vector<int>());
+        for(vector<int> v : prerequisites)
+        {
+            graph[v[0]].push_back(v[1]);
+        }
+        
+        vector<int> indegree(n,0);
+        for(vector<int> v : prerequisites)
+        {
+            indegree[v[1]]++;
+        }
+        
+        queue<int> que;
+        for(int i=0;i<n;i++)
+        {
+            if(indegree[i] == 0)
+                que.push(i);
+        }
+        vector<int> ans;
+        while(que.size() != 0)
+        {
+            int size = que.size();
+            while(size--)
+            {
+                int rvtx = que.front();
+                que.pop();
+                ans.push_back(rvtx);
+                for(int e : graph[rvtx])
+                {
+                    if(--indegree[e] == 0)
+                    {
+                        que.push(e);
+                    }
+                }
+            }
+        }
+        if(ans.size() != n)
+        {
+            return 0;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+};
