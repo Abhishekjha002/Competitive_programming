@@ -45,10 +45,64 @@ void TopologySort_01()
     for(int i=ans.size()-1;i>=0;i--)
         cout<<ans[i]<<" ";
 }
+
+//Kahn's Algo
+void kahn_algo()
+{
+    vector<int> inDegree(N,0);
+    for(int i=0;i<N;i++)
+    {
+        for(int e : graph[i])
+        {
+            inDegree[e]++;
+        }
+    }
+
+    queue<int> que;
+    for(int i=0;i<N;i++)
+    {
+        if(inDegree[i] == 0)
+            que.push(i);
+    }
+
+    vector<int> ans;
+    while(que.size() != 0)
+    {
+        int size = que.size();
+        while(size-- > 0)
+        {
+            int rvtx = que.front();
+            que.pop();
+            ans.push_back(rvtx);
+            for(int e : graph[rvtx])
+            {
+                if(--inDegree[e] == 0)
+                {
+                    que.push(e);
+                }
+                
+            }
+        }
+    }
+
+    if(ans.size() != N)
+    {
+        cout<<"Cycle\n";
+    }
+    else
+    {
+        for(int i=0;i<N;i++)
+            cout<<ans[i]<<" ";
+        cout<<"\n";
+    }
+    
+}
 void solve()
 {
     makeGraph();
-    TopologySort_01();
+    // TopologySort_01();
+    kahn_algo();
+
 }
 int main()
 {
