@@ -1,0 +1,15 @@
+class Solution {
+public:
+    int helper(vector<int>& nums, int index,int sum, int target)
+    {
+        if(index == nums.size())
+            return sum == target;
+        
+        return helper(nums,index+1,sum+nums[index],target) + helper(nums,index+1,sum-nums[index],target);
+    }
+    int findTargetSumWays(vector<int>& nums, int S) {
+        
+        return helper(nums,0,0,S);
+        
+    }
+};
