@@ -1,0 +1,44 @@
+class Solution {
+public:
+    void GCC(int src, vector<bool>& visited, vector<vector<int>>& graph)
+    {
+        visited[src] = true;
+        for(int e : graph[src])
+        {
+            if(!visited[e])
+                GCC(e,visited,graph);
+        }
+    }
+    int findCircleNum(vector<vector<int>>& M) {
+        
+        int n = M.size();
+        int m = M[0].size();
+        
+        vector<vector<int>> graph(n,vector<int>());
+        
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<m;j++)
+            {
+                if(M[i][j] == 1)
+                {
+                    graph[i].push_back(j);
+                }
+            }
+        }
+        
+        vector<bool> visited(n,false);
+        
+        int ans = 0;
+        
+        for(int i=0;i<n;i++)
+        {
+            if(!visited[i])
+            {
+                ans++;
+                GCC(i,visited,graph);
+            }
+        }
+        return ans;
+    }
+};
