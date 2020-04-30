@@ -1,0 +1,64 @@
+class Solution {
+public:
+    bool helper(vector<int>& arr,int p,int p1,int p2)
+    {
+        if(arr.size() == 0)
+        {
+            if(p1 >= p2)
+                return 1;
+            else
+                return 0;
+        }
+
+        int x1 = arr[0];
+        int x2 = arr.back();
+
+        vector<int> temp1 = arr;
+        vector<int> temp2 = arr;
+
+        bool c;
+
+        if(p == 0)
+        {
+            c = false;
+            p1 += x1;
+            temp1.erase(temp1.begin());
+            c = c || helper( temp1, (p+1)%2, p1, p2 );
+            p1 -= x1;
+
+            if(!c)
+            {
+                p1 += x2;
+                temp2.pop_back();
+                c = c || helper( temp2, (p+1)%2, p1, p2 );
+                p1 -= x2;
+            }
+        }
+        else
+        {
+            c = true;
+            p2 += x1;
+            temp1.erase(temp1.begin());
+            c = c && helper(temp1,(p+1)%2,p1,p2);
+            p2 -= x1;
+
+            if(c)
+            {
+                p2 += x2;
+                temp2.pop_back();
+                c = c && helper(temp2,(p+1)%2,p1,p2);
+                p2 -= x2;
+            }
+        }
+
+        return c;
+    }
+    bool PredictTheWinner(vector<int>& nums)
+    {
+        if(nums.size() == 0)
+            return 1;
+        if(nums.size() == 1 && nums[0] == 0)
+            return 1;
+        return helper(nums,0,0,0);
+    }
+};
