@@ -1,0 +1,132 @@
+#include <iostream>
+#include <bits/stdc++.h>
+#include <string>
+#include <vector>
+using namespace std;
+
+class Node{
+
+public :
+    bool wordEnd = false;
+    vector<Node*> childs;
+    Node()
+    {
+        this->childs.assign(26,nullptr);
+        this->wordEnd = false;
+    }
+};
+
+Node* root = nullptr;
+
+void insert(string word, Node* node)
+{
+    Node* curr = node;
+    int n = word.size();
+    for(int i=0;i<n;i++)
+    {
+        int idx = word[i] - 'a';
+        if(curr->childs[idx] == nullptr)    
+        {
+            curr->childs[idx] = new Node(); 
+        }
+        curr = curr->childs[idx];
+    }
+    curr->wordEnd = true;
+}
+vector<string> ans;
+
+bool isPalindrome(string s)
+{
+    int st = 0;
+    int en = s.size()-1;
+    while(st <= en)
+    {
+        if(s[st] == s[en])
+        {
+            st++;
+            en--;
+        }
+        else
+            return false;
+    }
+    return true;
+}
+void DFS(Node* node, string temp)
+{
+    if(node->wordEnd)
+    {
+        ans.push_back(temp);
+        return;
+    }
+
+    for(int i=0;i<26;i++)
+    {
+        if(node->childs[i] != nullptr)
+        {
+            temp += (char)(i+97); 
+            DFS(node->childs[i], temp);
+            temp.pop_back();
+        }
+    }
+}
+bool check_(Node* node)
+{
+    DFS(node,"");
+    
+    for(string s : ans)
+    {
+        if(isPalindrome(s))
+            return true;
+    }
+    return false;
+}
+bool check(Node* node, string s)
+{
+    int i;
+    for(i=0;i<s.size();i++)
+    {
+        int idx = s[i] - 'a';
+        if(node->childs[idx] == nullptr)
+        {
+            if(node->wordEnd == true)
+                break;
+            return false;
+        }
+        node = node->childs[idx];
+    }
+
+    if(i != s.size())
+    {
+        string test = s.substr(i);
+        return isPalindrome(test);
+    }
+    else
+        return check_(node);
+    
+}
+
+bool findIfPalindromePair(vector<string> arr) {
+    
+    root = new Node();
+
+    for(string s : arr)
+    {
+        insert(s, root);
+    }    
+
+    bool res = false;
+    for(string s : arr)
+    {
+        reverse(s.begin(),s.end());
+        res = res || check(root, s);
+    }
+    return res;
+}
+
+int main()
+{
+    vector<string> v = {"abc", "dcba"};
+    cout<<findIfPalindromePair(v);
+}
+
+
