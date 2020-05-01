@@ -1,0 +1,79 @@
+class Solution {
+public:
+     bool isBipartite_(int src,vector<int>& vis, vector<vector<int>>& gp)
+    {
+        queue<pair<int,int>> que;
+        que.push({src,0});
+        
+        while(que.size() != 0)
+        {
+            int size = que.size();
+            
+            while(size--)
+            {
+                pair<int,int> rvtx = que.front();
+                que.pop();
+                
+                if(vis[rvtx.first] != -1)
+                {
+                    if(vis[rvtx.first] != rvtx.second)
+                        return 0;
+                }
+                
+                vis[rvtx.first] = rvtx.second;
+                
+                for(int e : gp[rvtx.first])
+                {
+                    if(vis[e] == -1)
+                        que.push({e,(rvtx.second+1)%2});
+                }
+                
+            }
+        }
+        return 1; 
+    }
+    bool isBipartite(vector<vector<int>>& gp) {
+       
+        if(gp.size() == 0)
+            return 1;
+        
+        int n = gp.size();
+        
+        
+        vector<int> vis(n,-1);
+        
+        bool res = true;
+        for(int i=0;i<n;i++)
+        {
+            if(vis[i] == -1)
+            {
+                bool k = isBipartite_(i,vis,gp);
+                if(k == false)
+                    return false;
+            }
+        }
+        
+        return res;
+    }
+    
+    bool possibleBipartition(int N, vector<vector<int>>& dislikes) {
+        
+        if(dislikes.size() == 0 || dislikes[0].size() == 0)
+            return 1;
+        
+        int n = dislikes.size();
+        int m = dislikes[0].size();
+        
+        
+        vector<vector<int>> graph(N,vector<int>());
+        
+        for(vector<int> v : dislikes)
+        {
+            graph[v[0]-1].push_back(v[1]-1);
+            graph[v[1]-1].push_back(v[0]-1);
+        }
+        
+        return isBipartite(graph);
+        
+    }
+};
