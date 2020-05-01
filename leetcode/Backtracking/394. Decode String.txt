@@ -1,0 +1,37 @@
+class Solution {
+public:
+    string helper(string s, int& pos)
+    {
+        int num = 0;
+        string ans = "";
+        
+        for(;pos<s.size();pos++)
+        {
+            char c = s[pos];
+            if(c == '[')
+            {
+                string str = helper(s,++pos);
+                for(;num>0;num--)
+                    ans += str;
+            }
+            else if(c >= '0' && c <= '9')
+            {
+                num = num*10 + c - '0';
+            }
+            else if(c == ']')
+            {
+                return ans;
+            }
+            else
+            {
+                ans += c;
+            }
+        }
+        return ans;
+    }
+    
+    string decodeString(string s) {
+        int pos = 0;
+        return helper(s,pos); 
+    }
+};
