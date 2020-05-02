@@ -1,0 +1,56 @@
+class Solution {
+public:
+    
+    bool DFS(int src, int des, vector<bool>& vis, vector<vector<int>>& graph)
+    {
+        if(src == des)
+        {
+            return true;
+        }
+        vis[src] = true;
+        bool res = false;
+        for(int e : graph[src])
+        {
+            if(res == true)
+                return res;
+            if(!vis[e])
+                res = res || DFS(e,des,vis,graph);
+        }
+        return res;
+    }
+    bool canReach(vector<int>& arr, int start) {
+        
+        if(arr[start] == 0)
+            return 1;
+        
+        int n = arr.size();
+        vector<vector<int>> graph(n,vector<int>());
+        for(int i=0;i<n;i++)
+        {
+            int x1 = i - arr[i];
+            int x2 = i + arr[i];
+            
+            if(x1 >= 0 && x1 < n)
+            {
+                graph[i].push_back(x1);
+            }
+            if(x2 >= 0 && x2 < n)
+            {
+                graph[i].push_back(x2);
+            }
+        }
+        
+        int des = -1;
+        bool c = false;
+        for(int i=0;i<n && !c;i++)
+        {
+            if(arr[i] == 0)
+            {
+                vector<bool> vis(n,false);
+                c = c || DFS(start, i, vis, graph);
+            }
+        }
+        
+        return c;   
+    }
+};
