@@ -1,0 +1,73 @@
+class Solution {
+public:
+    vector<vector<int>> dirN = {{1,0},{0,1},{-1,0},{0,-1}};
+    int helper(vector<vector<int>>& vis, vector<vector<int>>& matrix)
+    {
+        int n = vis.size();
+        int m = vis[0].size();
+        
+        queue<int> que;
+        for(int i=0;i<vis.size();i++)
+        {
+            for(int j=0;j<vis[0].size();j++)
+            {
+                if(vis[i][j] == 0)
+                {
+                    que.push(i*m+j);
+                }
+            }
+        }
+        int level = 0;
+        while(que.size()!=0)
+        {
+            int size = que.size();
+            
+            while(size--)
+            {
+                int rvtx = que.front(); que.pop();
+                int x = (rvtx/m);
+                int y = (rvtx%m);
+                
+                for(int i=0;i<dirN.size();i++)
+                {
+                    int r = x + dirN[i][0];
+                    int c = y + dirN[i][1];
+                    if(r >= 0 && c >= 0 && r < n && c < m && matrix[x][y] < matrix[r][c] && --vis[r][c] == 0)
+                    {
+                        que.push(r*m+c);
+                    }
+                }
+            }
+            level++;
+        }
+        return level;
+    }
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+        
+        if(matrix.size() == 0 || matrix[0].size() == 0)
+            return 0;
+        
+        int n = matrix.size();
+        int m = matrix[0].size();
+        
+        vector<vector<int>> vis(n,vector<int>(m,0));
+        
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<m;j++)
+            {
+                for(int d=0;d<dirN.size();d++)
+                {
+                    int r = i + dirN[d][0];
+                    int c = j + dirN[d][1];
+                    if(r >= 0 && c >= 0 && r < n && c < m && matrix[i][j] < matrix[r][c])
+                    {
+                        vis[r][c] += 1;
+                    }
+                }
+            }
+        }
+        
+        return helper(vis, matrix);
+    }
+};
