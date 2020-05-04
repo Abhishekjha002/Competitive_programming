@@ -1,0 +1,55 @@
+class Solution {
+public:
+    int numBusesToDestination(vector<vector<int>>& routes, int S, int T) {
+        
+        unordered_map<int,vector<int>> mymap;
+        for(int i=0;i<routes.size();i++)
+        {
+            for(int e : routes[i])
+            {
+                mymap[e].push_back(i);
+            }
+        }
+                
+        unordered_set<int> route;
+        unordered_set<int> stand;
+        
+        queue<int> que;
+        que.push(S);
+        stand.insert(S);
+        
+        int level = 0;
+        while(que.size() != 0)
+        {
+            int size = que.size();
+            while(size--)
+            {
+                int rvtx = que.front();
+                que.pop();
+                
+                if(rvtx == T)
+                    return level;
+                
+                for(int e : mymap[rvtx])
+                {
+                    if(route.count(e) == 0)
+                    {
+                        route.insert(e);
+                        for(int ele : routes[e])
+                        {
+                            if(stand.count(ele) == 0)
+                            {
+                                stand.insert(ele);
+                                que.push(ele);
+                            }
+                        }
+                    }
+                }
+                
+            }
+            level++;
+        }
+        
+        return -1;
+    }
+};
