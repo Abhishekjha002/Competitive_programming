@@ -1,0 +1,51 @@
+//################################################1061. Lexicographically Smallest Equivalent String
+// Given strings A and B of the same length, we say A[i] and B[i] are equivalent characters. For example, if A = "abc" and B = "cde", then we have 'a' == 'c', 'b' == 'd', 'c' == 'e'.
+
+// Equivalent characters follow the usual rules of any equivalence relation:
+
+// 1.) Reflexivity: 'a' == 'a'
+// 2.) Symmetry: 'a' == 'b' implies 'b' == 'a'
+// 3.) Transitivity: 'a' == 'b' and 'b' == 'c' implies 'a' == 'c'
+// For example, given the equivalency information from A and B above, S = "eed", "acd", and "aab" are equivalent strings, and "aab" is the lexicographically smallest equivalent string of S.
+
+// Return the lexicographically smallest equivalent string of S by using the equivalency information from A and B.
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> par;
+
+int findPar(int vtx)
+{
+    if(par[vtx] == vtx)
+        return vtx;
+    return par[vtx] = findPar(par[vtx]);
+}
+
+string smallestEquivalentString(string A, string B, string S)
+{
+    for(int i=0;i<26;i++)
+        par.push_back(i);
+
+    for(int i=0;i<A.size();i++)
+    {
+        int x1 = findPar(A[i] - 'a');
+        int x2 = findPar(B[i] - 'a');
+        par[A[i] - 'a'] = min(x1, x2);
+        par[B[i] - 'a'] = min(x1,x2);
+    }
+
+    string ans;
+    for(int i=0;i<S.size();i++)
+    {
+        ans += (char)(findPar(S[i] - 'a') + 'a');
+    }
+    return ans;
+}
+
+int main()
+{
+    cout<<smallestEquivalentString("parker","morris","parser");
+}
+
