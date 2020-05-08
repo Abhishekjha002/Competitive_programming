@@ -1,0 +1,54 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define lli long long int
+vector<int> par;
+vector<int> setSize;
+
+int findPar(int vtx)
+{
+    if (par[vtx] == vtx)
+        return vtx;
+    return par[vtx] = findPar(par[vtx]);
+}
+lli JourneyToMoon_UnionFind()
+{
+    int n, p;
+    cin >> n >> p;
+
+    for (int i = 0; i < n; i++)
+        par.push_back(i);
+    while (p-- > 0)
+    {
+        int u, v;
+        cin >> u >> v;
+
+        int p1 = findPar(u);
+        int p2 = findPar(v);
+
+        par[p1] = min(p1, p2);
+        par[p2] = min(p1, p2);
+    }
+
+    vector<lli> countrySize(n, 0);
+
+    int WorldPopulation = n;
+    for (int i = 0; i < n; i++)
+        countrySize[findPar(i)]++;
+
+    lli ans = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (par[i] == i)
+        {
+            ans += countrySize[i] * (WorldPopulation - countrySize[i]);
+            WorldPopulation -= countrySize[i];
+        }
+    }
+
+    return ans;
+}
+int main()
+{
+    cout<<JourneyToMoon_UnionFind();
+    return 0;
+}
