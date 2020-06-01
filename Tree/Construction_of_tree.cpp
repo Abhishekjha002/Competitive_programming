@@ -23,7 +23,7 @@ public:
 int idx = 0;
 Node* constructTree(vector<int>& arr)
 {
-    if(arr.size() == idx || arr[idx] == -1)
+    if(arr.size() <= idx || arr[idx] == -1)
     {
         idx++;
         return nullptr;
