@@ -133,14 +133,125 @@ void postOrder(Node* node)
     cout<<node->data<<" ";
 }
 
+bool rootToNodePath(Node* node, int data, vector<Node*>& arr)
+{
+    if(node == nullptr)
+        return false;
+    
+    if(node->data == data)
+    {
+        arr.push_back(node);
+        return true;
+    }
+
+    bool res = rootToNodePath(node->left, data, arr) || rootToNodePath(node->right, data, arr);
+
+    if(res)
+        arr.push_back(node);
+    
+    return res;
+}
+
+vector<Node*> rootToNodePath_02(Node* node, int data)
+{
+    if(node == nullptr)
+        return {};
+    
+    if(node->data == data)
+    {
+        vector<Node*> base;
+        base.push_back(node);
+        return base;
+    }
+
+    vector<Node*> left = rootToNodePath_02(node->left, data); //In JAVA: O(1) & C++: O(1)
+    if(left.size() != 0)
+    {
+        left.push_back(node);
+        return left;
+    }
+    vector<Node*> right = rootToNodePath_02(node->right, data);
+    if(right.size() != 0)
+    {
+        right.push_back(node);
+        return right;
+    }
+
+    return {};
+} 
+
+vector<Node*> rootToNodePath_03(Node* node, int data)
+{
+    vector<Node*> res;
+    if(node == nullptr)
+        return res;
+    
+    if(node->data == data)
+    {
+        res.push_back(node);
+        return res;
+    }
+
+    res = rootToNodePath_02(node->left, data); //In JAVA: O(1) & C++: O(1)
+    if(res.size() != 0)
+    {
+        res.push_back(node);
+        return res;
+    }
+    res = rootToNodePath_02(node->right, data);
+    if(res.size() != 0)
+    {
+        res.push_back(node);
+        return res;
+    }
+
+    return res;
+}
+
+// Leetcode 236. ===================================================================
+
+Node* lowestCommonAncestor(Node* root, int p, int q)
+{
+    vector<Node*> path1;
+    vector<Node*> path2;
+    rootToNodePath(root, p, path1);
+    rootToNodePath(root, q, path2);
+    
+    Node* prev = NULL;
+    int i = path1.size() - 1;
+    int j = path2.size() - 1;
+    
+    while(i >= 0 && j >= 0)
+    {
+        if(path1[i]->data != path2[j]->data)
+            break;
+        prev = path1[i];
+        i--;
+        j--;
+    }
+    return prev;
+}
 
 void solve()
 {
     vector<int> arr = {10, 20, 40, -1, -1, 50, 80, -1, -1, 90, -1, -1, 30, 60, 100, -1, -1, -1, 70, 110, -1, -1, 120, -1, -1};
     Node *root = constructTree(arr);
     //display(root);
-    preOrder(root);
+    //preOrder(root);
+    // vector<int> ans;
+    // rootToNodePath(root, 100, ans);
+    // for(int e : ans)
+    //     cout<<e<<" ";
+
+    // vector<Node*> ans = rootToNodePath_02(root, 100);
+    // for(Node* n : ans)
+    //     cout<<n->data<<"->";
+    Node* ans = lowestCommonAncestor(root, 50, 100);
+    cout<<ans->data;
 }
+
+
+
 int main()
 {
     solve();
