@@ -232,6 +232,66 @@ Node* lowestCommonAncestor(Node* root, int p, int q)
     return prev;
 }
 
+Node* LCANode = nullptr;
+bool lowestCommonAncestor_02(Node* root, int p1, int p2)
+{
+    if(root == nullptr)
+        return false;
+    
+    bool selfDone = false;
+
+    if(root->data == p1 || root->data == p2)
+    {
+        selfDone = true;
+    }
+
+    bool leftDone = lowestCommonAncestor_02(root->left, p1, p2);
+    
+    if(LCANode != nullptr)
+        return true;
+    
+    bool rightDone = lowestCommonAncestor_02(root->right, p1, p2);
+
+    if(LCANode != nullptr)
+        return true;
+
+    if((selfDone && leftDone) || (selfDone && rightDone) || (leftDone && rightDone))
+        LCANode = root;
+
+    return selfDone || leftDone || rightDone;
+
+}
+
+void KDown(Node* root, int level, Node* blockNode)
+{
+    if(root == nullptr || root == blockNode)
+        return;
+    
+    if(level == 0)
+    {
+        cout<<root->data<<" ";
+        return;
+    }
+
+    KDown(root->left, level-1, blockNode);
+    KDown(root->right, level-1, blockNode);
+
+}
+
+void allNodeKAway(Node* root, int target, int K)
+{
+    vector<Node*> path;
+    rootToNodePath(root, target, path);
+
+    Node* blockNode = nullptr;
+    for(int i=0;i<path.size();i++)
+    {
+        KDown(path[i], K-i, blockNode);
+        blockNode = path[i];
+    }
+}
+
+
 void solve()
 {
     vector<int> arr = {10, 20, 40, -1, -1, 50, 80, -1, -1, 90, -1, -1, 30, 60, 100, -1, -1, -1, 70, 110, -1, -1, 120, -1, -1};
@@ -246,8 +306,13 @@ void solve()
     // vector<Node*> ans = rootToNodePath_02(root, 100);
     // for(Node* n : ans)
     //     cout<<n->data<<"->";
-    Node* ans = lowestCommonAncestor(root, 50, 100);
-    cout<<ans->data;
+    //Node* ans = lowestCommonAncestor(root, 50, 100);
+    //cout<<ans->data;
+
+
+    // lowestCommonAncestor_02(root, 40, 50);
+    // cout<<LCANode->data;
+    allNodeKAway(root, 50, 4);
 }
 
 
