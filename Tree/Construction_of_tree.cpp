@@ -286,11 +286,50 @@ void allNodeKAway(Node* root, int target, int K)
     Node* blockNode = nullptr;
     for(int i=0;i<path.size();i++)
     {
+        if(K-i < 0)  
+            break;
         KDown(path[i], K-i, blockNode);
         blockNode = path[i];
     }
 }
 
+int allNodeKAway_02_(Node* root, int target, int K)
+{
+    if(root == nullptr)
+        return -1;
+    
+    if(root->data == target)
+    {
+        KDown(root, K, nullptr);
+        return 1;
+    }
+
+    
+    int leftDistance = allNodeKAway_02_(root->left, target, K);
+    
+    if(leftDistance != -1)
+    {
+        if(K - leftDistance >= 0)
+            KDown(root, K - leftDistance, root->left);
+        return leftDistance + 1;
+    }
+
+    int rightDistance = allNodeKAway_02_(root->right, target, K);
+    
+    if(rightDistance != -1)
+    {
+        if(K - rightDistance >= 0)
+            KDown(root, K - rightDistance, root->right);
+        return rightDistance + 1;
+    }
+
+    return -1;
+}
+
+void allNodeKAway_02(Node* root, int target, int K)
+{
+    int c = allNodeKAway_02_(root, target, K);
+}
 
 void solve()
 {
@@ -312,7 +351,10 @@ void solve()
 
     // lowestCommonAncestor_02(root, 40, 50);
     // cout<<LCANode->data;
-    allNodeKAway(root, 50, 4);
+    //allNodeKAway(root, 50, 4);
+    //cout<<helper1(root, 60, 0);
+
+    allNodeKAway_02(root, 50 , 1);
 }
 
 
