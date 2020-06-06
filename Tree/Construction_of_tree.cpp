@@ -66,7 +66,7 @@ int height(Node* node)
 {
     if(node == nullptr)
         return -1;          // return -1, height w.r.t edge, return 0, height w.r.t node.
-    return max(max(height(node->left), height(node->right)), node->data);
+    return max(height(node->left), height(node->right)) + 1;
 }
 
 int Maximum(Node* node)
@@ -331,9 +331,70 @@ void allNodeKAway_02(Node* root, int target, int K)
     int c = allNodeKAway_02_(root, target, K);
 }
 
+// Diameter of a Tree.###################################################################
+
+int diameterOfTree(Node* root)
+{
+    if(root == nullptr)
+        return 0;
+    
+    int ld = diameterOfTree(root->left);
+    int rd = diameterOfTree(root->right);
+
+    int lh = height(root->left);
+    int rh = height(root->right);
+
+    int myDia = lh + rh + 2;
+    
+    return max(ld, max(rd, myDia));
+}
+
+class diaPair{
+
+public:
+    int dia;
+    int hei;
+    
+    diaPair(int dia, int hei)
+    {
+        this->dia = dia;
+        this->hei = hei;
+    }
+};
+
+diaPair diameterOfTree_02(Node* root)
+{
+    if(root == nullptr)
+        return diaPair(0,-1);
+    
+    diaPair lr = diameterOfTree_02(root->left);
+    diaPair rr = diameterOfTree_02(root->right);
+
+    diaPair myRes = diaPair(0,-1);
+    myRes.dia = max(max(lr.dia, rr.dia),(lr.hei + rr.hei + 2));
+
+    myRes.hei = max(lr.hei, rr.hei) + 1;
+    
+    return myRes;
+}
+
+int diameter = 0;
+int diameterOfTree_03(Node* root)
+{
+    if(root == nullptr)
+        return -1;
+    
+    int lh = diameterOfTree_03(root->left);
+    int rh = diameterOfTree_03(root->right);
+
+    diameter = max(diameter, (lh + rh + 2));
+    return max(lh,rh) + 1;
+}
+
 void solve()
 {
     vector<int> arr = {10, 20, 40, -1, -1, 50, 80, -1, -1, 90, -1, -1, 30, 60, 100, -1, -1, -1, 70, 110, -1, -1, 120, -1, -1};
+    // vector<int> arr = {4, 3, 2, -1, -1, 1, -1, -1, 7, -1, -1};
     Node *root = constructTree(arr);
     //display(root);
     //preOrder(root);
@@ -354,7 +415,11 @@ void solve()
     //allNodeKAway(root, 50, 4);
     //cout<<helper1(root, 60, 0);
 
-    allNodeKAway_02(root, 50 , 1);
+    // allNodeKAway_02(root, 50 , 1);
+    // cout<<diameterOfTree(root);
+    
+    diameterOfTree_03(root);
+    cout<<diameter;
 }
 
 
