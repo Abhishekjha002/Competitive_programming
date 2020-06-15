@@ -210,6 +210,96 @@ public class question{
         return head;
     }
 
+    // LeetCode : 143. Reorder List
+    public void reorderList(ListNode head) {
+        
+        if(head == null || head.next == null)
+            return;
+        
+        ListNode curr = head;
+        ListNode mid = middleNode02(curr);
+        ListNode head1 = mid.next;
+        
+        mid.next = null;
+        
+        head1 = reverseList(head1);
+        
+        ListNode curr1 = head;
+        ListNode curr2 = head1;
+        
+        while(curr1 != null && curr2 != null){
+            
+            ListNode fwd1 = curr1.next;
+            ListNode fwd2 = curr2.next;
+            curr1.next = curr2;
+            curr2.next = fwd1;
+            curr1 = fwd1;
+            curr2 = fwd2;
+            
+        }
 
+        //Class Question - get the actual LL from reorder list
+        public void reorderList(ListNode head) {
+        
+        if(head == null || head.next == null)
+            return;
+        
+        ListNode h1 = head;
+        ListNode h2 = head.next;
+        
+        ListNode f1 = h1;
+        ListNode f2 = h2;
+        
+        while(f2 != null && f2.next != null){
+            
+            f1.next = f2.next;
+            f1 = f2.next;
+            f2.next = f1.next;
+            f2 = f1.next;
+            
+        }
+        
+        h2 = reverseList(h2);
+        f1.next = h2;
+        
+        }
+
+        // LeetCode : 21. Merge Two Sorted Lists
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        
+        if(l1 == null || l2 == null) return l1==null?l2:l1;
+        
+        ListNode head = new ListNode(-1);
+        ListNode prev = head;
+        
+        ListNode curr1 = l1;
+        ListNode curr2 = l2;
+        
+        while(curr1 != null && curr2 != null){
+            if(curr1.val <= curr2.val){
+                prev.next = curr1;
+                prev = curr1;
+                curr1 = curr1.next;
+            }else{
+                prev.next = curr2;
+                prev = curr2;
+                curr2 = curr2.next;
+            }
+        }
+        
+        if(curr1 != null){
+            prev.next = curr1;
+        }
+        
+        if(curr2 != null){
+            prev.next = curr2;
+        }
+        
+        return head.next;
+    }
+
+    
+ 
+    
 
 }
