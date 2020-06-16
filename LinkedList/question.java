@@ -298,8 +298,155 @@ public class question{
         return head.next;
     }
 
-    
+
+    // LeetCode : 328. Odd Even Linked List
+    public ListNode oddEvenList(ListNode head) {
+        
+        if(head == null || head.next == null){
+            return head;
+        }
+        
+        ListNode h1 = head;
+        ListNode h2 = head.next;
+        
+        ListNode f1 = h1;
+        ListNode f2 = h2;
+        
+        while(f2 != null && f2.next != null){
+            f1.next = f2.next;
+            f1 = f2.next;
+            f2.next = f1.next;
+            f2 = f1.next;
+        }
+        
+        f1.next = h2;
+        return head;
+    }
  
-    
+    //Class Question : odd - even
+    public ListNode odd_even(ListNode head) {
+        
+        if(head == null || head.next == null){
+            return head;
+        }
+        
+        ListNode ho = null;
+        ListNode he = null;
+        
+        ListNode f1 = null;
+        ListNode f2 = null;
+        
+        ListNode prev = null;
+        ListNode curr = head;
+        
+        
+        while(curr != null){
+            
+            if(prev == null){
+                if(curr.val%2 == 0){
+                    he = curr;
+                    f2 = he;
+                }else{
+                    ho = curr;
+                    f1 = ho;
+                }
+            }
+            
+            else if(prev.val%2 != 0){
+                if(curr.val%2 == 0){
+                    if(he == null){
+                        prev.next = null;
+                        he = curr;
+                        f2 = he;
+                    }
+                    else{
+                        prev.next = null;
+                        f2.next = curr;
+                        f2 = curr;
+                    }
+                }
+                else{
+                    f1 = curr;
+                }
+            }
+            
+            else if(prev.val%2 == 0){
+                if(curr.val%2 != 0){
+                    if(ho == null){
+                        prev.next = null;
+                        ho = curr;
+                        f1 = ho;
+                    }
+                    else{
+                        prev.next = null;
+                        f1.next = curr;
+                        f1 = curr;
+                    }
+                }
+                else{
+                    f2 = curr;
+                }
+            }
+            
+            prev = curr;
+            curr = curr.next;
+            
+        }
+        
+        f1.next = he;
+        return ho;
+    }
+
+    // LeetCode : 141. Linked List Cycle
+    public boolean hasCycle(ListNode head) {
+        
+        if(head == null || head.next == null)
+            return false;
+        
+        ListNode slow = head;
+        ListNode fast = head;
+        
+        while(fast != null && fast.next != null){
+            
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast){
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    // Leetcode : 142. Linked List Cycle II
+    public ListNode detectCycle(ListNode head) {
+        
+        if(head == null || head.next == null){
+            return null;
+        }
+        
+        ListNode slow = head;
+        ListNode fast = head;
+        
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast)
+                break;
+        }
+        
+        if(slow != fast){
+            return null;
+        }
+        
+        slow = head;
+        while(slow != fast){
+            slow = slow.next;
+            fast = fast.next;
+        }
+        
+        return slow;
+        
+    }
 
 }
