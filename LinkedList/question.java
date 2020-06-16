@@ -449,4 +449,69 @@ public class question{
         
     }
 
+    // LeetCode : 160. Intersection of Two Linked Lists
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        
+        if(headA == null || headB == null)
+            return null;
+        
+        if(headA.next == null && headB.next == null){
+            if(headA == headB)
+                return headA;
+            return null;
+        }
+        
+        ListNode curr = headA;
+        while(curr.next!=null){
+            curr = curr.next;
+        }
+        
+        curr.next = headA;
+        
+        ListNode ip = detectCycle(headB);
+        
+        curr.next = null;
+        return ip;
+
+    }
+
+    // LeetCode : 148. Sort List
+    public ListNode sortList(ListNode head) {
+        
+        if(head == null || head.next == null)
+            return head;
+        
+        ListNode curr1 = head;
+        ListNode mid = middleNode02(curr1);
+        ListNode curr2 = mid.next;
+        mid.next = null;
+        
+        return mergeTwoLists(sortList(curr1), sortList(curr2));
+   
+    }
+
+
+    // LeetCode : 23. Merge k Sorted Lists
+    public ListNode mergeKLists(ListNode[] lists) {
+        
+        int k = lists.length;
+        if(k == 0){
+            return null;
+        }
+        return mergeKLists_(lists, 0, k-1);
+    }
+    public ListNode mergeKLists_(ListNode[] lists, int si, int ei) {
+        
+        if(si == ei){
+            return lists[si];
+        }
+        
+        int mid = (si+ei)/2;
+        
+        return mergeTwoLists(mergeKLists_(lists,si,mid), mergeKLists_(lists,mid+1,ei));
+    }
+
+    
+
+
 }
