@@ -511,6 +511,65 @@ public class question{
         return mergeTwoLists(mergeKLists_(lists,si,mid), mergeKLists_(lists,mid+1,ei));
     }
 
+    // LeetCode : 2. Add Two Numbers
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        
+        if(l1 == null || l2 == null)
+            return l1 == null ? l2 : l1;
+        
+        int c = 0;
+        ListNode curr1 = l1;
+        ListNode curr2 = l2;
+        
+        ListNode head = new ListNode(-1);
+        ListNode prev = head;
+        while(curr1 != null && curr2 != null){
+            
+            int k = curr1.val + curr2.val + c;
+            
+            ListNode temp = new ListNode(k%10);
+            prev.next = temp; 
+            prev = temp;
+            
+            c = k/10;
+            
+            curr1 = curr1.next;
+            curr2 = curr2.next;
+        }
+        
+        while(curr1 != null){
+            int k = curr1.val + c;
+            ListNode temp = new ListNode(k%10);
+            prev.next = temp; 
+            prev = temp;
+            
+            c = k/10;
+            curr1 = curr1.next;
+        }
+        
+        while(curr2 != null){
+            int k = curr2.val + c;
+            ListNode temp = new ListNode(k%10);
+            prev.next = temp; 
+            prev = temp;
+            
+            c = k/10;
+            curr2 = curr2.next;
+        }
+        
+        if(curr1 == null && curr2 == null && c != 0){
+            ListNode temp = new ListNode(c);
+            prev.next = temp;
+            prev = temp;
+            
+        }
+        return head.next;
+        
+    }
+
+
+
     
 
 
