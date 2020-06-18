@@ -569,8 +569,71 @@ public class question{
     }
 
 
+    // LeetCode : 82. Remove Duplicates from Sorted List II
+    public ListNode deleteDuplicates(ListNode head) {
+        
+        if(head == null || head.next == null)
+            return head;
+        
+        ListNode h1 = new ListNode(-1);
+        h1.next = head;
+        ListNode prev = h1;
+        ListNode curr = head.next;
+        boolean check = false;
+        
+        while(curr != null)
+        {
+            while(curr.val == prev.next.val)
+            {
+                curr = curr.next;
+                check = true;
+                
+                if(curr == null)
+                {
+                    prev.next = null;
+                    return h1.next;
+                }
+            }
+            if(check == true)
+            {
+                prev.next = curr;
+                check = false;
+            }    
+            else
+            {
+                prev = prev.next;
+            }
+            curr = curr.next;
+        }
+        
+        return h1.next;
+        
+    }
 
-    
+    // LeetCode : 82. Remove Duplicates from Sorted List II - > recursive approach
+
+    public ListNode deleteDuplicates(ListNode head) {
+        
+        if(head == null || head.next == null)
+            return head;
+        
+        ListNode curr = head;
+        
+        if(curr.next != null && curr.val == curr.next.val)
+        {
+            while(curr.next != null && curr.val == curr.next.val)
+            {
+                curr = curr.next;
+            }
+            return deleteDuplicates(curr.next);
+        }
+        
+        curr.next = deleteDuplicates(curr.next);
+        
+        return curr;
+
+    }
+
 
 
 }
