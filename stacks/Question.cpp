@@ -200,17 +200,120 @@ public:
     }
 };
 
-void solve()
-{
-    vector<int> arr = {2,-1,8,6,9,4,3,5};
-    vector<int> ans = nsol(arr);
-    for(int i : ans)
+
+// Leetcode : 921. Minimum Add to Make Parentheses Valid
+
+int minAddToMakeValid(string str) {
+        
+    int openingReq = 0;
+    int closingReq = 0;
+    
+    int n = str.size();
+    
+    for(int i=0;i<n;i++)
     {
-        cout<<i<<" , ";
+        if(str[i] == '(')
+            closingReq++;
+        else if(closingReq > 0)
+            closingReq--;
+        else
+            openingReq++;
     }
+    
+    return openingReq + closingReq;
+        
 }
-int main()
-{
-    solve();
-    return 0;
+
+// Leetcode : 1249. Minimum Remove to Make Valid Parentheses
+
+    string minRemoveToMakeValid(string str) {
+        
+        int n = str.size();
+        vector<bool> check(n,false);
+        stack<int> st;
+        st.push(-1);
+        
+        
+        for(int i=0;i<n;i++)
+        {
+            if(st.top() != -1 && str[i] == ')' && str[st.top()] == '(')
+            {
+                check[st.top()] = true;
+                check[i] = true;
+                st.pop();
+            }
+            else if(str[i] == '(')
+                st.push(i);
+            else if(str[i] != ')')
+                check[i] = true;
+        }
+        
+        string ans = "";
+        for(int i=0;i<n;i++)
+        {
+            if(check[i])
+                ans += str[i];
+        }
+        
+        return ans;
+    }
+
+// Leetcode : 32. Longest Valid Parentheses
+
+int longestValidParentheses(string str) {
+        
+        int n = str.size();
+        stack<int> st;
+        st.push(-1);
+        int ans = 0;
+        
+        for(int i=0;i<n;i++)
+        {
+            if(st.top() != -1 && str[i] == ')' && str[st.top()] == '(')
+            {
+                st.pop();
+                ans = max(ans, i-st.top());
+            }
+            else
+                st.push(i);
+        }
+        
+        return ans;
+}
+
+// Leetcode : 735. Asteroid Collision
+vector<int> asteroidCollision(vector<int>& arr) {
+    
+    int n = arr.size();
+    stack<int> st;
+    
+    for(int i=0;i<n;i++)
+    {
+        if(arr[i] > 0){
+            st.push(arr[i]);
+        }
+        else
+        {
+            while(st.size() != 0 && st.top() > 0 && st.top() < -arr[i])
+                st.pop();
+            
+            if(st.size() != 0 && st.top() == -arr[i])
+                st.pop();
+            
+            else if(st.size() == 0 || st.top() < 0)
+                st.push(arr[i]);
+        }
+    }
+    
+    vector<int> ans(st.size(),0);
+    int i = st.size() - 1;
+    
+    while(st.size() != 0)
+    {
+        ans[i--] = st.top();
+        st.pop();
+    }
+    
+    return ans;
+    
 }
