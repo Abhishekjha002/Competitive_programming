@@ -317,3 +317,167 @@ vector<int> asteroidCollision(vector<int>& arr) {
     return ans;
     
 }
+
+
+// Leetcode : 84. Largest Rectangle in Histogram
+
+vector<int> nsor(vector<int>& arr)
+{
+    int n = arr.size();
+    stack<int> st;
+    st.push(-1);
+    
+    vector<int> ans(n,n);
+    
+    for(int i=0;i<n;i++)
+    {
+        while(st.top() != -1 && arr[st.top()] > arr[i])
+        {
+            ans[st.top()] = i;
+            st.pop();
+        }
+        st.push(i);
+    }
+    
+    return ans;
+}
+vector<int> nsol(vector<int>& arr)
+{
+    int n = arr.size();
+    stack<int> st;
+    st.push(-1);
+    
+    vector<int> ans(n,-1);
+    
+    for(int i=n-1;i>=0;i--)
+    {
+        while(st.top() != -1 && arr[st.top()] > arr[i])
+        {
+            ans[st.top()] = i;
+            st.pop();
+        }
+        st.push(i);
+    }
+    
+    return ans;
+}
+int largestRectangleArea(vector<int>& heights) {
+    
+    int n = heights.size();
+    vector<int> sol = nsol(heights);
+    vector<int> sor = nsor(heights);
+    
+    int maxArea = 0;
+    
+    for(int i=0;i<n;i++)
+    {
+        int area = heights[i] * (sor[i] - sol[i] - 1);
+        maxArea = max(maxArea, area);
+    }
+    
+    return maxArea;
+}
+
+
+int largestRectangleArea_02(vector<int>& heights) {
+    
+    int n = heights.size();
+    
+    stack<int> st;
+    st.push(-1);
+    
+    int maxArea = 0;
+    
+    for(int i=0;i<n;i++)
+    {
+        while(st.top() != -1 && heights[st.top()] > heights[i])
+        {
+            int h = heights[st.top()];
+            st.pop();
+            int w = (i - st.top() - 1);
+            int area = h*w;
+            maxArea = max(maxArea, area);
+        }
+        st.push(i);
+    }
+    
+    while(st.size() != 1)
+    {
+        int h = heights[st.top()];
+        st.pop();
+        int w = (n - st.top() - 1);
+        int area = h*w;
+        maxArea = max(maxArea, area);
+    }
+    
+    return maxArea;
+    
+}
+
+// Leetcode : 85. Maximal Rectangle
+
+int maximalRectangle(vector<vector<char>>& matrix) {
+        
+    if(matrix.size() == 0 || matrix[0].size() == 0)
+    {
+        return 0;
+    }
+    
+    int n = matrix.size();
+    int m = matrix[0].size();
+    int maxArea = 0;
+    
+    vector<int> temp(m,0);
+    
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<m;j++)
+        {
+            int x = matrix[i][j] - '0';
+            if(x == 0)
+                temp[j] = 0;
+            else
+                temp[j] += x;
+        }
+        
+        int area = largestRectangleArea(temp);
+        maxArea = max(maxArea, area);
+    }
+    
+    return maxArea;
+}
+
+
+// Leetcode : 42. Trapping Rain Water
+
+int trap(vector<int>& height) {
+        
+    int n = height.size();
+    
+    vector<int> lMax(n,-1);
+    vector<int> rMax(n,-1);
+    
+    int prev = -1;
+    for(int i=0;i<n;i++)
+    {
+        lMax[i] = max(prev, height[i]);
+        prev = lMax[i];
+    }
+    
+    prev = -1;
+    for(int i=n-1;i>=0;i--)
+    {
+        rMax[i] = max(prev, height[i]);
+        prev = rMax[i];
+    }
+    
+    int water = 0;
+    for(int i=0;i<n;i++)
+    {
+        water += min(lMax[i], rMax[i]) - height[i];
+    }
+    
+    return water;
+    
+}
+
