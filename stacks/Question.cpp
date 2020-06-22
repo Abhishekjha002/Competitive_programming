@@ -481,3 +481,126 @@ int trap(vector<int>& height) {
     
 }
 
+int trap02(vector<int>& height) {
+        
+    int n = height.size();
+    
+    stack<int> st;
+    st.push(-1);
+    
+    int water = 0;
+    
+    for(int i=0;i<n;i++)
+    {
+        while(st.top() != -1 && height[st.top()] <= height[i])
+        {
+            int w1 = height[st.top()];
+            st.pop();
+            if(st.top() != -1)
+            {
+                int h = i - st.top() - 1;
+                int w2 = min(height[i], height[st.top()]) - w1;
+                water += h * w2;
+            }
+        }
+        st.push(i);
+    }
+    
+    return water;
+}
+
+int trap03(vector<int>& height) {
+        
+    int n = height.size();
+    
+    int li = 0, ri = n-1, lMaxBH = 0, rMaxBH = 0;
+    
+    int water = 0;
+    
+
+    while(li < ri)
+    {
+        lMaxBH = max(lMaxBH, height[li]);
+        rMaxBH = max(rMaxBH, height[ri]);
+        
+        if(lMaxBH <= rMaxBH)
+            water += lMaxBH - height[li++];
+        else
+            water += rMaxBH - height[ri--];
+    }
+    
+    return water;
+    
+}
+
+
+// Leetcode : 155. Min Stack
+class MinStack {
+public:
+    stack<long> st;
+    long minSF;
+    
+    MinStack() {
+        minSF = 0;
+    }
+    
+    void push(int x) {
+        
+        if(st.size() == 0)
+        {
+            st.push(x);
+            minSF = x;
+            return;
+        }
+        
+        if(minSF > x)
+        {
+            st.push(x - minSF + x);
+            minSF = x;
+        }
+        else
+        {
+            st.push(x);
+        }
+        
+        
+    }
+    
+    void pop() {
+        
+        if(st.top() >= minSF)
+        {
+            st.pop();
+        }
+        else
+        {
+            minSF = minSF - st.top() + minSF;
+            st.pop();
+        }
+    }
+    
+    int top() {
+        
+        if(st.top() > minSF)
+            return st.top();
+        
+        return minSF; 
+        
+    }
+    
+    int getMin() {
+        return (int) minSF;
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
