@@ -593,11 +593,124 @@ public:
     }
 };
 
+// Leetcode : 946. Validate Stack Sequences
+
+bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
+        
+    stack<int> st;
+    int n = pushed.size();
+    int j = 0;
+    
+    for(int i=0;i<n;i++)
+    {
+        while(st.size() != 0 && st.top() == popped[j])
+        {
+            st.pop();
+            j++;
+        }
+        st.push(pushed[i]);
+    }
+    
+    while(st.size() != 0 && st.top() == popped[j])
+    {
+        st.pop();
+        j++;
+    }
+    
+    return st.size() == 0 ? true : false;
+}
+
+// Leetcode : 402. Remove K Digits
+string removeKdigits(string num, int k) {
+        
+    int n = num.size();
+    stack<char> st;
+    
+    for(int i=0;i<n;i++)
+    {
+        while(st.size() != 0 && st.top() > num[i] && k > 0)
+        {
+            st.pop();
+            k--;
+        }
+        st.push(num[i]);
+    }
+    
+    while(k--)
+    {
+        st.pop();
+    }
+    
+    string s = "";
+    while(st.size() != 0)
+    {
+        s += st.top();
+        st.pop();
+    }
+    
+    reverse(s.begin(),s.end());
+    
+    string ans = "";
+    for(int i=0;i<s.size();i++)
+    {
+        if(s[i] == '0')
+            continue;
+        else
+        {
+                ans = s.substr(i);
+            break;
+        }
+    }
+    
+    return ans.size() == 0 ? "0" : ans;
+}
 
 
-
-
-
+// Leetcode : 316. Remove Duplicate Letters
+string removeDuplicateLetters(string s) {
+        
+    stack<char> st;
+    vector<int> freq(26,0);
+    vector<int> seen(26,false);
+    int n = s.size();
+    
+    
+    for(int i=0;i<n;i++)
+    {
+        freq[s[i] - 'a']++;
+    }
+    
+    for(int i=0;i<n;i++)
+    {
+        if(seen[s[i] - 'a'])
+        {
+            freq[s[i] - 'a']--;
+            continue;
+        }
+        
+        while(st.size() != 0 && st.top() > s[i] && freq[st.top() - 'a'] > 1)
+        {
+            seen[st.top() - 'a'] = false;
+            freq[st.top() - 'a']--;
+            st.pop();
+        }
+        
+        if(!seen[s[i] - 'a'])
+        {
+            st.push(s[i]);
+            seen[s[i] - 'a'] = true;
+        }
+    }
+    string ans = "";
+    while(st.size() != 0)
+    {
+        ans += st.top();
+        st.pop();
+    }
+    reverse(ans.begin(),ans.end());
+    return ans;
+    
+}
 
 
 
