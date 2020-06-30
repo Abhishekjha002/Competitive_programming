@@ -781,6 +781,75 @@ int numDistinct(string s, string t)
     display2D(dp);
 }
 
+//Geeks: https://practice.geeksforgeeks.org/problems/count-palindromic-subsequences/1
+
+int countPS(string s, int i, int j, vector<vector<int>>& dp)
+{
+    if(i > j)
+        return dp[i][j] = 0;
+
+    if(i == j)
+        return dp[i][j] = 1;
+
+    if(dp[i][j] != -1)
+        return dp[i][j];
+
+    int middleString = countPS(s, i + 1, j - 1, dp);
+    int excludingLast = countPS(s, i, j - 1, dp);
+    int excludingFirst = countPS(s, i + 1, j, dp);
+
+    if(s[i] == s[j])
+        return dp[i][j] = middleString + 1 + excludingLast + excludingFirst - middleString;
+    
+    return dp[i][j] = excludingLast + excludingFirst - middleString;
+
+}
+
+int countPS_(string s, int i, int j, vector<vector<int>>& dp)
+{
+    if(i > j)
+        return dp[i][j] = 0;
+
+    if(i == j)
+        return dp[i][j] = 1;
+
+    if(dp[i][j] != -1)
+        return dp[i][j];
+
+    int middleString = countPS_(s, i + 1, j - 1, dp);
+    int excludingLast = countPS_(s, i, j - 1, dp);
+    int excludingFirst = countPS_(s, i + 1, j, dp);
+
+    int ans = excludingFirst + excludingLast;
+    return dp[i][j] = (s[i] == s[j]) ? ans + 1 : ans - middleString;
+
+}
+
+int countPS_DP(string s, int i, int j, vector<vector<int>>& dp)
+{
+    int n = s.length();
+    for (int gap = 0; gap < n; gap++)
+    {
+        for (int i = 0, j = gap; j < n; j++, i++)
+        {
+            if (i == j)
+            {
+                dp[i][j] = 1;
+                continue;
+            }
+
+            int middleString = dp[i + 1][j - 1];
+            int excludingLast = dp[i][j - 1];
+            int excludingFirst = dp[i + 1][j];
+
+            int ans = excludingFirst + excludingLast;
+            dp[i][j] = (s[i] == s[j]) ? ans + 1 : ans - middleString;
+        }
+    }
+    return dp[0][n - 1];
+}
+
+
 void stringSubstringSet()
 {
     string str = "geeksforgeeks";
