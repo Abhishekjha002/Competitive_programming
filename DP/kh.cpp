@@ -574,228 +574,81 @@ int count_of_ways_02(int n, int k)
     return newGroup + existingGroup;
 }
 
-// https://practice.geeksforgeeks.org/problems/mobile-numeric-keypad/0
 
-//Substring and Subsequence Series.=========================================================================
-
-vector<vector<bool>> isPlaindromeSubstring(string str)
+vector<vector<bool>> isPalindrome(string s)
 {
-    int n = str.length();
+    int n = s.size();
     vector<vector<bool>> dp(n,vector<bool>(n,false));
 
     for(int gap=0;gap<n;gap++)
     {
-        for(int i=0,j=gap;j<n;i++,j++)
+        for(int i=0,j=gap;i<n && j<n;i++,j++)
         {
             if(gap == 0)
                 dp[i][j] = true;
-            else if(gap == 1 && str[i] == str[j])
-                dp[i][j] = true;
+            
+            else if(gap == 1)
+                dp[i][j] = s[i] == s[j];
+            
             else
-                dp[i][j] = str[i] == str[j] && dp[i+1][j-1];
+                dp[i][j] = s[i] == s[j] && dp[i+1][j-1];
         }
     }
 
     return dp;
 }
 
-//Leetcode 005.==================================================================
-string longestPlaindromeSubstring(string str)
+string longestIncreasingSubsequence_02(string str)
 {
-    int n = str.length();
-    vector<vector<int>> dp(n,vector<int>(n,0));
+    int n = str.size();
+    int maxLen = 1;
+    int si = 0;
+    int ei = 0;
+    int low, high;
 
-    int maxLen = 0;
-    int si=0,ei=0;
-    for(int gap=0;gap<n;gap++)
+    for(int i=0;i<n;i++)
     {
-        for(int i=0,j=gap;j<n;i++,j++)
-        {
-            if(gap == 0)
-                dp[i][j] = 1;
-            else if(gap == 1 && str[i] == str[j])
-                dp[i][j] = gap + 1;
-            else if(str[i] == str[j] && dp[i+1][j-1] != 0)
-                dp[i][j] = gap + 1; 
+        //even length
+        low = i - 1;
+        high = i;
 
-            if(dp[i][j] > maxLen)
+        while(low >= 0 && high < n && str[low] == str[high])
+        {
+            if(high - low + 1 > maxLen)
             {
-                maxLen = dp[i][j];
-                si = i;
-                ei = j;
+                maxLen = high - low + 1;
+                si = low;
+                ei = high;
             }
+            low--;
+            high++;
+        }
+
+        //odd Length
+        low = i - 1;
+        high = i + 1;
+
+        while(low >= 0 && high < n && str[low] == str[high])
+        {
+            if(high - low + 1 > maxLen)
+            {
+                maxLen = high - low + 1;
+                si = low;
+                ei = high;
+            }
+            low--;
+            high++;
         }
     }
-    
+
     return str.substr(si, (ei - si + 1));
 }
 
-// Leetcode : 647. Palindromic Substrings
 
-int countAllPlaindromeSubstring(string str)
+
+void set3()
 {
-    int n = str.length();
-    vector<vector<int>> dp(n,vector<int>(n,0));
-
-    int count = 0;
-
-    for(int gap=0;gap<n;gap++)
-    {
-        for(int i=0,j=gap;j<n;i++,j++)
-        {
-            if(gap == 0)
-                dp[i][j] = 1;
-            else if(gap == 1 && str[i] == str[j])
-                dp[i][j] = gap + 1;
-            else if(str[i] == str[j] && dp[i+1][j-1] != 0)
-                dp[i][j] = gap + 1; 
-
-            count += dp[i][j] > 0 ? 1 : 0; 
-        }
-    }
-    
-    return count;
-}
-
-// Leetcode : 516. Longest Palindromic Subsequence
-int longestPlaindromeSubseq_Rec(string str, int si, int ei, vector<vector<int>>& dp, vector<vector<bool>>& isPalindrome)
-{
-    if(isPalindrome[si][ei])
-        return dp[si][ei] = (ei - si + 1);
-    
-    if(dp[si][ei] != -1)
-        return dp[si][ei];
-
-    int len = 0;
-
-    if(str[si] == str[ei])
-        len = longestPlaindromeSubseq_Rec(str, si + 1, ei - 1, dp, isPalindrome) + 2;
-    else
-        len = max(longestPlaindromeSubseq_Rec(str, si , ei - 1, dp, isPalindrome), longestPlaindromeSubseq_Rec(str, si + 1, ei, dp, isPalindrome));
-    
-    return dp[si][ei] = len;
-}
-
-int longestPlaindromeSubseq_DP(string str, int si, int ei, vector<vector<int>>& dp, vector<vector<bool>>& isPalindrome)
-{
-    int n = str.length();
-
-    for(int gap = 0; gap < n; gap++)
-    {
-        for(si = 0, ei = gap; ei < n; si++, ei++)
-        {
-            if(isPalindrome[si][ei])
-            {
-                dp[si][ei] = (ei - si + 1);
-                continue;
-            }
-
-
-            int len = 0;
-            if(str[si] == str[ei])
-                len = dp[si+1][ei-1] + 2;
-            else
-                len = max(dp[si][ei-1], dp[si+1][ei]);
-            
-            dp[si][ei] = len;
-        }
-    }
-    return dp[0][n-1];
-}
-
-
-//Leetcode 115 : distinct-subsequences.=========================================================
-
-int distinct_subsequences(string& S, string& T, int n, int m, vector<vector<int>>& dp)
-{
-    if(m == 0)
-        return 1;
-    
-    if(n < m)
-        return 0;
-
-    if(dp[n][m] != -1)
-        return dp[n][m];
-
-    if(S[n-1] == T[m-1])
-        return dp[n][m] = distinct_subsequences(S, T, n - 1, m, dp) + distinct_subsequences(S, T, n - 1, m - 1, dp);
-
-    return dp[n][m] = distinct_subsequences(S, T, n - 1, m, dp);
-}
-
-int distinct_subsequences_DP(string& S, string& T, int n, int m, vector<vector<int>>& dp)
-{
-    int N = n, M = m;
-
-    for(n = 0; n <= N; n++)
-    {
-        for(m = 0; m <= M; m++)
-        {
-            if(m == 0)
-            {
-                dp[n][m] = 1;
-                continue;
-            }
-            
-            if(n < m)
-            {
-                dp[n][m] = 0;
-                continue;
-            }
-
-            if(S[n-1] == T[m-1])
-                dp[n][m] = dp[n-1][m] + dp[n-1][m-1];
-
-            else
-                dp[n][m] = dp[n-1][m];
-        }
-    }
-    return dp[N][M];
-}
-
-int distinct_subsequences_02(string& S, string& T, int i, int j, vector<vector<int>>& dp)
-{
-    if(j == T.length())
-        return 1;
-    
-    if(T.length() - j > S.length() - i)
-        return 0;
-
-    if(dp[i][j] != -1)
-        return dp[i][j];
-
-    if(S[i] == T[j])
-        return dp[i][j] = distinct_subsequences_02(S, T, i + 1, j, dp) + distinct_subsequences_02(S, T, i + 1, j + 1, dp);
-
-    return dp[i][j] = distinct_subsequences_02(S, T, i + 1, j, dp);
-}
-
-int numDistinct(string s, string t)
-{
-    int n = s.length();
-    int m = t.length();
-    vector<vector<int>> dp(n + 1, vector<int>(m + 1, -1));
-    cout << distinct_subsequences(s, t, n, m, dp) << endl;
-    // cout << distinct_subsequences_DP(s, t, n, m, dp) << endl;
-
-    display2D(dp);
-}
-
-void stringSubstringSet()
-{
-    string str = "geeksforgeeks";
-    int n = str.length();
-    int si = 0, ei = n - 1;
-    vector<vector<bool>> ispalindrome = isPlaindromeSubstring(str);
-    vector<vector<int>> dp(n, vector<int>(n, -1));
-    // cout << countAllPlaindromeSubstring("aaa");
-    
-    // cout << longestPlaindromeSubseq_Rec(str, si, ei, dp, ispalindrome) << "\n";
-
-    // cout << longestPlaindromeSubseq_DP(str, si, ei, dp, ispalindrome) << "\n";
-
-    cout << numDistinct("geeksforgeeks","gks") << "\n";
-    display2D(dp);
+    cout << longestIncreasingSubsequence_02("abccbefgpgf");
 }
 
 void set2()
@@ -848,7 +701,7 @@ void solve()
     // set1();
     // pathSet();
     // set2();
-    stringSubstringSet();
+    set3();
 }
 
 
