@@ -1019,12 +1019,96 @@ int maxDotProduct(vector<int>& nums1, vector<int>& nums2) {
             int a2 = dp[i][j+1];
             int a3 = dp[i+1][j];
             
-            dp[i][j] = max({val,a1,a2,a3});                
+            dp[i][j] = max(max(val,a1), max(a2, a3));                
         }
     }
     
     return dp[0][0];
 }
+
+//Coin_Change/Target_Type.===================================================================================
+
+int coinChangePermutation(vector<int>& arr, int tar, vector<int>& dp)
+{
+    if(tar == 0)
+    {
+        return dp[tar] = 1;
+    }
+
+    int count = 0;
+    for(int e : arr)
+    {
+        if(tar - e >= 0)
+            count += coinChangePermutation(arr, tar - e, dp);
+    }
+
+    return dp[tar] = count;
+}
+
+int coinChangePermutation_DP(vector<int>& arr, int tar, vector<int>& dp)
+{
+    int Tar = tar;
+    for(int tar=0;tar<=Tar;tar++)
+    {
+        if(tar == 0)
+        {
+            dp[tar] = 1;
+            continue;
+        }
+
+        int count = 0;
+        for(int e : arr)
+        {
+            if(tar - e >= 0)
+                count += coinChangePermutation(arr, tar - e, dp);
+        }
+
+        dp[tar] = count;
+    }
+
+    return dp[Tar];
+
+}
+
+int coinChangeCombination_DP(vector<int> &arr, int tar, vector<int> &dp)
+{
+    dp[0] = 1;
+
+    for(int e : arr)
+    {
+        for(int i = e; i <= tar; i++)
+            dp[i] += dp[i - e];
+    }
+
+    return dp[tar];
+}
+
+//https://www.geeksforgeeks.org/find-number-of-solutions-of-a-linear-equation-of-n-variables/
+
+int LinearEquation_DP(vector<int> &coeff, int rhs)
+{
+    vector<int> dp(rhs + 1, 0);
+    dp[0] = 1;
+
+    for(int e : coeff)
+    {
+        for(int i = e; i <= rhs; i++)
+            dp[i] += dp[i-e];
+    }
+    return dp[rhs];
+}
+
+void coinChange()
+{
+    vector<int> arr{2,2,3};
+    int tar = 4;
+    vector<int> dp(tar + 1, 0);
+    // cout << coinChangePermutation(arr, tar, dp) << endl;
+    // cout << coinChangePermutation_DP(arr, tar, dp) << endl;
+    cout << coinChangeCombination_DP(arr, tar, dp) << "\n";
+    display(dp);
+}
+
 
 void printlongestCommonSubsequence(string text1, string text2)
 {
@@ -1101,7 +1185,8 @@ void solve()
     // set1();
     // pathSet();
     // set2();
-    stringSubstringSet();
+    // stringSubstringSet();
+    coinChange();
 }
 
 
