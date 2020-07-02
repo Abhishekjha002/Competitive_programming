@@ -849,6 +849,189 @@ int countPS_DP(string s, int i, int j, vector<vector<int>>& dp)
     return dp[0][n - 1];
 }
 
+// Leetcode : 1143 Longest Common Subsequence
+
+int longestCommonSubsequence(string& s1, string& s2, int i, int j, vector<vector<int>>& dp)
+{
+    if(i == s1.length() || j == s2.length())
+        return dp[i][j] = 0;
+    
+    if(dp[i][j] != -1)
+        return dp[i][j];
+
+    int ans = 0;
+    if(s1[i] == s2[j])
+        ans = longestCommonSubsequence(s1, s2, i + 1, j + 1, dp) + 1;
+    else
+    {
+        ans = max(longestCommonSubsequence(s1, s2, i, j + 1, dp), longestCommonSubsequence(s1, s2, i + 1, j, dp));
+    }
+    
+    return dp[i][j] = ans;
+}
+
+int longestCommonSubsequence_DP(string& s1, string& s2, int i, int j, vector<vector<int>>& dp)
+{
+    vector<vector<string>> dps(s1.length()+1,vector<string>(s2.length()+1));
+
+    for(i = s1.length(); i >= 0; i--)
+    {
+        for(j = s2.length(); j >= 0; j--)
+        {
+            if(i == s1.length() || j == s2.length())
+            {   
+                dp[i][j] = 0;
+                continue;
+            }
+
+            int ans = 0;
+            if(s1[i] == s2[j])
+            {
+                ans = dp[i + 1][j + 1] + 1;
+                dps[i][j] = s1[i] + dps[i+1][j+1];
+            }
+            else
+            {
+                if(dp[i][j + 1] >= dp[i + 1][j])
+                {
+                    ans = dp[i][j + 1];
+                    dps[i][j] = dps[i][j + 1];
+                }
+                else
+                {
+                    ans = dp[i + 1][j];
+                    dps[i][j] = dps[i + 1][j];   
+                }
+                
+            }
+            
+            dp[i][j] = ans;
+        }
+    }
+    cout << dps[0][0] << "\n";
+    return dp[0][0];
+}
+
+int max_ = 0;
+int longestCommonSubstring(string& s1, string& s2, int i, int j, vector<vector<int>>& dp)
+{
+    if(i == s1.length() || j == s2.length())
+        return dp[i][j] = 0;
+    
+    if(dp[i][j] != 0)
+        return dp[i][j];
+
+    longestCommonSubstring(s1, s2, i, j + 1, dp);
+    longestCommonSubstring(s1, s2, i + 1, j, dp);
+
+    if(s1[i] == s2[j])
+    {
+        int a = longestCommonSubstring(s1, s2, i + 1, j + 1, dp) + 1;
+        max_ = max(max_, a);
+        return dp[i][j] = max_;
+    }
+
+    return 0;
+}
+
+int longestCommonSubstring_DP(string& s1, string& s2, int i, int j, vector<vector<int>>& dp)
+{
+    int max_ = 0;
+    int k = 0;
+    for(i = s1.length(); i >= 0; i--)
+    {
+        for(j = s2.length(); j >= 0; j--)
+        {
+            if(i == s1.length() || j == s2.length())
+            {
+                dp[i][j] = 0;
+                continue;
+            }
+
+            if(s1[i] == s2[j])
+            {
+                dp[i][j] = dp[i+1][j+1] + 1;
+                if(max_ < dp[i][j])
+                {
+                    max_ = dp[i][j];
+                    k = j;
+                }
+            }
+        }
+    }
+    cout << s2.substr(k,max_) << "\n";
+    return max_;
+}
+
+// Leetcode : 1035. Uncrossed Lines
+
+int maxUncrossedLines(vector<int>& A, vector<int>& B) {
+        
+    int n = A.size();
+    int m = B.size();
+    
+    vector<vector<int>> dp(n+1,vector<int>(m+1));
+    
+    for(int i=n;i>=0;i--)
+    {
+        for(int j=m;j>=0;j--)
+        {
+            if(i == n || j == m)
+            {
+                dp[i][j] = 0;
+                continue;
+            }
+            
+            if(A[i] == B[j])
+            {
+                dp[i][j] = dp[i+1][j+1] + 1;
+            }
+            
+            else
+                dp[i][j] = max(dp[i+1][j], dp[i][j+1]);
+        }
+    }
+    return dp[0][0];
+}
+
+
+// Leetcode : 1458. Max Dot Product of Two Subsequences
+
+int maxDotProduct(vector<int>& nums1, vector<int>& nums2) {
+        
+    int n = nums1.size();
+    int m = nums2.size();
+    
+    vector<vector<int>> dp(n+1,vector<int>(m+1,0));
+
+    for(int i=n;i>=0;i--)
+    {
+        for(int j=m;j>=0;j--)
+        {
+            if(i == n || j == m)
+            {
+                dp[i][j] = -1e8;
+                continue;
+            }
+            
+            int val = nums1[i]*nums2[j];
+            int a1 = dp[i+1][j+1] + val;
+            int a2 = dp[i][j+1];
+            int a3 = dp[i+1][j];
+            
+            dp[i][j] = max({val,a1,a2,a3});                
+        }
+    }
+    
+    return dp[0][0];
+}
+
+void printlongestCommonSubsequence(string text1, string text2)
+{
+    vector<vector<int>> dp(text1.size()+1,vector<int>(text2.size()+1));
+    cout << longestCommonSubstring_DP(text1, text2, 0, 0, dp);
+    // cout << max_;
+}
 
 void stringSubstringSet()
 {
@@ -863,8 +1046,9 @@ void stringSubstringSet()
 
     // cout << longestPlaindromeSubseq_DP(str, si, ei, dp, ispalindrome) << "\n";
 
-    cout << numDistinct("geeksforgeeks","gks") << "\n";
-    display2D(dp);
+    // cout << numDistinct("geeksforgeeks","gks") << "\n";
+    // longestCommonSubsequence("abcde","ace"); 
+    printlongestCommonSubsequence("aabcd","abcd");
 }
 
 void set2()
