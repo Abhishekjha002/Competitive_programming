@@ -23,6 +23,35 @@ int wordBreak_(string s,string ans)
     }
     return c;
 }
+
+//dp ============================
+int wordBreak_(string word, string ans, int idx, vector<int>& dp)
+{
+    // cout << idx << "\n";
+    if(word.size() == idx)
+    {
+        cout << ans << "\n";
+        return dp[idx] = 1;
+    }
+    // cout << "hi\n";
+
+    if(dp[idx] != -1)
+        return dp[idx];
+
+    int count = 0;
+
+    for(int i=1;i<=word.size() - idx;i++)
+    {
+        string temp = word.substr(idx, i);
+        if(map.find(temp) != map.end())
+        {
+            count += wordBreak_(word, ans + temp + " ", idx + i, dp);
+        }
+    }
+
+    return dp[idx] = count;
+}
+
 void wordBreak()
 {
     string str = "catsanddog";

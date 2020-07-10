@@ -29,6 +29,7 @@ int NQueen(vector<vector<int>>& arr, int tqp, int index, string ans)
     }
 
     int c = 0;
+
     for(int i= index;i<arr.size()*arr[0].size();i++)
     {
         int x = i/arr[0].size();
@@ -40,6 +41,7 @@ int NQueen(vector<vector<int>>& arr, int tqp, int index, string ans)
             arr[x][y] = 0;
         }
     }
+    
     return c;
 }
 void solve()

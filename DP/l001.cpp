@@ -1026,7 +1026,48 @@ int maxDotProduct(vector<int>& nums1, vector<int>& nums2) {
     return dp[0][0];
 }
 
+void printlongestCommonSubsequence(string text1, string text2)
+{
+    vector<vector<int>> dp(text1.size()+1,vector<int>(text2.size()+1));
+    cout << longestCommonSubstring_DP(text1, text2, 0, 0, dp);
+    // cout << max_;
+}
+
+// Leetcode : 72. Edit Distance
+
+int minDistance_(string& s1, string& s2, int n, int m, vector<vector<int>>& dp)
+{
+    if(n == 0 || m == 0)
+    {
+        return dp[n][m] = (n == 0 ? m : n);
+    }
+    
+    if(dp[n][m] != 0)
+        return dp[n][m];
+    
+    if(s1[n-1] == s2[m-1])
+        return dp[n][m] = minDistance_(s1, s2, n - 1, m - 1, dp);
+    
+    int insert_ = minDistance_(s1, s2, n, m - 1, dp);
+    int replace_ = minDistance_(s1, s2, n - 1, m - 1, dp);
+    int delete_ = minDistance_(s1, s2, n - 1, m, dp);
+    
+    return dp[n][m] = min(insert_, min(replace_, delete_)) + 1;
+    
+}
+int minDistance(string word1, string word2) {
+    
+    int n = word1.size();
+    int m = word2.size();
+    
+    vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+    
+    return minDistance_(word1, word2, n, m, dp);
+    
+}
+
 //Coin_Change/Target_Type.===================================================================================
+
 
 int coinChangePermutation(vector<int>& arr, int tar, vector<int>& dp)
 {
@@ -1098,23 +1139,478 @@ int LinearEquation_DP(vector<int> &coeff, int rhs)
     return dp[rhs];
 }
 
+// Leetcode : 322. Coin Change
+
+int coinChange_(vector<int>& coins, int tar, vector<int>& dp)
+{
+    if(tar == 0)
+        return dp[0] = 0;
+    
+    if(dp[tar] != -1)
+        return dp[tar];
+    
+    int count = 1e7;
+    
+    for(int i=0;i<coins.size();i++)
+    {
+        if(tar-coins[i] >= 0)
+            count = min(count, coinChange_(coins, tar-coins[i], dp));
+    }
+    
+    return dp[tar] = count + 1;
+}
+
 void coinChange()
 {
     vector<int> arr{2,2,3};
     int tar = 4;
-    vector<int> dp(tar + 1, 0);
+    // vector<int> dp(tar + 1, 0);
     // cout << coinChangePermutation(arr, tar, dp) << endl;
     // cout << coinChangePermutation_DP(arr, tar, dp) << endl;
-    cout << coinChangeCombination_DP(arr, tar, dp) << "\n";
+    // cout << coinChangeCombination_DP(arr, tar, dp) << "\n";
+    
+    vector<int> dp(tar + 1, -1);
+    int ans = coinChange_(arr, tar, dp);
+    
     display(dp);
 }
 
 
-void printlongestCommonSubsequence(string text1, string text2)
+
+int targetSum(vector<int>& coins, int idx, int tar, vector<vector<int>>& dp)
 {
-    vector<vector<int>> dp(text1.size()+1,vector<int>(text2.size()+1));
-    cout << longestCommonSubstring_DP(text1, text2, 0, 0, dp);
-    // cout << max_;
+    if(tar == 0 || idx == coins.size())
+    {
+        if(tar == 0)
+            return dp[idx][tar] = 1;
+        return dp[idx][tar] = 0;
+    }
+
+    if(dp[idx][tar] != 0)
+        return dp[idx][tar];
+
+    int count = 0;
+
+    if(tar - coins[idx] >= 0)
+        count += targetSum(coins, idx + 1, tar - coins[idx], dp);
+    
+    count += targetSum(coins, idx + 1, tar, dp);
+
+    return dp[idx][tar] = count;
+}
+
+int targetSum_02(vector<int>& coins, int idx, int tar, vector<vector<int>>& dp)
+{
+    if(tar == 0 || idx == 0)
+    {
+        if(tar == 0)
+            return dp[idx][tar] = 1;
+        return dp[idx][tar] = 0;
+    }
+
+    if(dp[idx][tar] != 0)
+        return dp[idx][tar];
+
+    int count = 0;
+
+    if(tar - coins[idx - 1] >= 0)
+        count += targetSum_02(coins, idx - 1, tar - coins[idx - 1], dp);
+    
+    count += targetSum_02(coins, idx - 1, tar, dp);
+
+    return dp[idx][tar] = count;
+}
+
+int printPathOfTargetSum(vector<vector<bool>>& dp, int idx, vector<int>& coins, int tar, string ans)
+{
+
+    if(tar == 0 || idx == 0)
+    {
+        if(tar == 0)
+        {
+            cout << ans << "\n";
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+
+    if(tar - coins[idx - 1] >= 0 && dp[idx - 1][tar - coins[idx - 1]])
+        count += printPathOfTargetSum(dp, idx -1, coins, tar - coins[idx - 1], ans + to_string(coins[idx - 1]) + " ");
+
+    if(dp[idx - 1][tar])
+        count += printPathOfTargetSum(dp, idx - 1, coins, tar, ans);
+
+    return count;
+
+}
+
+
+int targetSum_02_DP(vector<int>& coins, int tar)
+{
+    vector<vector<bool>> dp(coins.size() + 1, vector<bool>(tar + 1, false));
+
+    int Tar = tar;
+    for(int idx=0;idx<=coins.size();idx++)
+    {
+        for(tar=0;tar<=Tar;tar++)
+        {
+            if(tar == 0 || idx == 0)
+            {
+                if(tar == 0)
+                    dp[idx][tar] = true;
+                continue;
+            }
+
+            if(tar - coins[idx - 1] >= 0)
+                dp[idx][tar]  = dp[idx - 1][tar - coins[idx-1]];
+            
+            dp[idx][tar] = dp[idx][tar] || dp[idx - 1][tar];   
+        }
+    }
+
+    // for(vector<bool> arr : dp)
+    // {
+    //     for(bool ele : arr)
+    //         cout << ele << " ";
+    //     cout << "\n";
+    // }
+    return printPathOfTargetSum(dp, coins.size(), coins, Tar, "");
+}
+
+int knapsack01(vector<int>& w, vector<int>& p, int idx, int weight, vector<vector<int>>& dp)
+{
+    if(weight == 0 || idx == 0)
+    {
+        return dp[idx][weight] = 0;
+    }
+
+    if(dp[idx][weight] != -1)
+        return dp[idx][weight];
+
+    int max_ = -1e7;
+    
+    if(weight - w[idx - 1] >= 0)
+        max_ = max(max_, knapsack01(w, p, idx - 1, weight - w[idx - 1], dp) + p[idx - 1]);
+    
+    max_ = max(max_, knapsack01(w, p, idx - 1, weight, dp));
+
+    return dp[idx][weight] = max_;
+}
+
+int unbounded(vector<int>& w, vector<int>& p, int weight)
+{
+    vector<int> dp(weight + 1, -1e8);
+    dp[0] = 0;
+
+    for(int i=0;i<w.size();i++)
+    {
+        for(int tar=w[i];tar<=weight;tar++)
+        {
+            dp[tar] = max(dp[tar], dp[tar - w[i]] + p[i]);
+        }
+    }
+
+    return dp[weight];
+}
+
+// Leetcode : 416. Partition Equal Subset Sum
+
+bool canPartition_(vector<int>& nums, int tar, int idx, vector<vector<int>>& dp)
+{
+    if(tar == 0 || idx == nums.size())
+    {
+        if(tar == 0)
+            return dp[idx][tar] = 1;
+        return dp[idx][tar] = 0;
+    }
+    
+    if(dp[idx][tar]!= -1)
+        return dp[idx][tar];
+    
+    bool count = false;
+    if(tar - nums[idx] >= 0)
+        count = count || canPartition_(nums, tar - nums[idx], idx + 1, dp);
+    
+    count = count || canPartition_(nums, tar, idx + 1, dp);
+
+    return dp[idx][tar] = count;
+
+}
+bool canPartition(vector<int>& nums) {
+    
+    int tar = 0;
+    for(int i : nums)
+        tar += i;
+    
+    if(tar%2 != 0)
+        return false;
+    
+    tar = tar/2 ;
+    
+    vector<vector<int>> dp(nums.size() + 1, vector<int>(tar+1, -1));
+    return canPartition_(nums, tar, 0, dp);
+    
+}
+
+
+
+void knapsack()
+{
+    vector<int> p = {60, 100, 120};
+    vector<int> w = {10, 20, 30};
+    int weight = 50;
+    int idx = w.size();
+    vector<vector<int>> dp(idx + 1, vector<int>(weight + 1, -1));
+
+    cout << knapsack01(w, p, idx, weight, dp) << "\n";
+}
+
+//Leetcode 494
+
+
+//LIS_Type=========================================================================================================
+
+//LIS
+
+int LIS_leftToRight(vector<int>& arr, vector<int>& dp)
+{
+    int N = arr.size();
+    int oMax = 0;
+
+    for(int i=0;i<N;i++)
+    {
+        dp[i] = 1;
+        for(int j=i-1;j>=0;j--)
+        {
+            if(arr[j] < arr[i])
+                dp[i] = max(dp[i], dp[j] + 1);
+        }
+
+        oMax = max(oMax, dp[i]);
+    }
+
+    return oMax;
+}
+
+//LDS
+
+int LIS_rightToLeft(vector<int>& arr, vector<int>& dp)
+{
+    int N = arr.size();
+    int oMax = 0;
+
+    for(int i=N-1;i>=0;i--)
+    {
+        dp[i] = 1;
+        for(int j=i+1;j<N;j++)
+        {
+            if(arr[j] < arr[i])
+                dp[i] = max(dp[i], dp[j] + 1);
+        }
+
+        oMax = max(oMax, dp[i]);
+    }
+
+    return oMax;
+}
+
+int LDS_leftToRight(vector<int>& arr, vector<int>& dp)
+{
+    int N = arr.size();
+    int oMax = 0;
+
+    for(int i=0;i<N;i++)
+    {
+        dp[i] = 1;
+        for(int j=i-1;j>=0;j--)
+        {
+            if(arr[j] > arr[i])
+                dp[i] = max(dp[i], dp[j] + 1);
+        }
+
+        oMax = max(oMax, dp[i]);
+    }
+
+    return oMax;
+}
+
+int LDS_rightToLeft(vector<int>& arr, vector<int>& dp)
+{
+    int N = arr.size();
+    int oMax = 0;
+
+    for(int i=N-1;i>=0;i--)
+    {
+        dp[i] = 1;
+        for(int j=i+1;j<N;j++)
+        {
+            if(arr[j] > arr[i])
+                dp[i] = max(dp[i], dp[j] + 1);
+        }
+
+        oMax = max(oMax, dp[i]);
+    }
+
+    return oMax;
+}
+
+
+//https://www.geeksforgeeks.org/longest-bitonic-subsequence-dp-15/
+//Longest bitonic subsequence
+
+int LBS(vector<int>& arr)
+{
+    int N = arr.size();
+
+    vector<int> dp1(N);
+    vector<int> dp2(N);
+
+    LIS_leftToRight(arr, dp1);
+    LIS_rightToLeft(arr, dp2);
+
+    int oMax = 0;
+
+    for(int i=0;i<N;i++)
+    {
+        oMax = max(oMax, (dp1[i] + dp2[i] - 1));
+    }
+
+    return oMax;
+}
+
+// https://practice.geeksforgeeks.org/problems/maximum-sum-increasing-subsequence/0
+int maximumIncreasingSumSubsequence(vector<int> &arr)
+{
+    int N = arr.size();
+    vector<int> dp(N);
+    int maxSum = 0;
+
+    for(int i=0;i<N;i++)
+    {
+        dp[i] = arr[i];
+        for(int j=i-1;j>=0;j--)
+        {
+            if(arr[j] < arr[i])
+                dp[i] = max(dp[i], dp[j] + arr[i]);
+        }
+        maxSum = max(maxSum, dp[i]);
+    }
+
+    return maxSum;
+}
+
+
+//https://practice.geeksforgeeks.org/problems/maximum-sum-bitonic-subsequence/0
+
+void LIS_L2R(vector<int>& arr, vector<int>& dp)
+{
+    int N = arr.size();
+
+    for(int i=0;i<N;i++)
+    {
+        dp[i] = arr[i];
+        for(int j=i-1;j>=0;j--)
+        {
+            if(arr[j] < arr[i])
+                dp[i] = max(dp[i], dp[j] + arr[i]);
+        }
+    }
+}
+void LIS_R2L(vector<int>& arr, vector<int>& dp)
+{
+    int N = arr.size();
+
+    for(int i=N-1;i>=0;i--)
+    {
+        dp[i] = arr[i];
+        for(int j=i+1;j<=N;j++)
+        {
+            if(arr[j] < arr[i])
+                dp[i] = max(dp[i], dp[j] + arr[i]);
+        }
+    }
+}
+
+int maximumSumBiotonicSubsequence(vector<int>& arr)
+{
+    int N = arr.size();
+    
+    vector<int> dp1(N);
+    vector<int> dp2(N);
+
+    LIS_L2R(arr, dp1);
+    LIS_R2L(arr, dp2);
+
+    int maxSum = 0;
+    for(int i=0;i<N;i++)
+    {
+        maxSum = max(maxSum, dp1[i] + dp2[i] - arr[i]);
+    }
+
+    return maxSum;
+}
+
+// minimum no of deletion to make array in sorted order in increasing order.
+int minDeletion(vector<int> &arr)
+{
+    int n = arr.size();
+    vector<int> dp(n, 0);
+
+    int oMax = 0;
+    for (int i = 0; i < n; i++)
+    {
+        dp[i] = 1;
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (arr[j] <= arr[i])
+                dp[i] = max(dp[i], dp[j] + 1);
+        }
+
+        oMax = max(oMax, dp[i]);
+    }
+
+    return n - oMax;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void LIS_Type()
+{
+    vector<int> arr = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
+    vector<int> dp(arr.size(), 0);
+
+    cout << LIS_leftToRight(arr, dp) << endl;
+}
+
+void targetType()
+{
+    vector<int> coins = {2,3,5,7};
+    int tar = 10;
+    vector<vector<int>> dp(coins.size() + 1, vector<int>(tar + 1, 0));
+
+    // cout << targetSum(coins, 0, tar, dp) << "\n";
+
+    // cout << targetSum_02(coins, coins.size(), tar, dp) << "\n";
+
+    // cout << targetSum_02_DP(coins, tar);
+
+    
+    // display2D(dp);
+
 }
 
 void stringSubstringSet()
@@ -1186,7 +1682,9 @@ void solve()
     // pathSet();
     // set2();
     // stringSubstringSet();
-    coinChange();
+    // coinChange();
+    // targetType();
+    knapsack();
 }
 
 

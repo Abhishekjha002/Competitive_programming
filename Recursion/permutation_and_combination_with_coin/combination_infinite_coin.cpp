@@ -50,6 +50,7 @@ int main()
     //denomination
     vector<int> arr = {2,3,5,7};
     int total = 10;
-    cout<<combination_infinite1(arr,total,"",0);
+    cout << combination_infinite(arr, total, "", 0);
+    // cout<<combination_infinite1(arr,total,"",0);
 
 }

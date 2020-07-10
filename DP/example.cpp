@@ -2,35 +2,60 @@
 #include <vector>
 #include <string>
 using namespace std;
-
-void allSubsequence(string s1, string s2)
+void LIS_L2R(vector<int>& arr, vector<int>& dp)
 {
-    if(s1.length() == 0 || s2.length() == 0)
+    int N = arr.size();
+
+    for(int i=0;i<N;i++)
     {
-        if(s1.length() == 0 && s2.length() != 0)
-            cout<<"NULL , "<<s2<<"\n";
-        if(s2.length() == 0 && s1.length() != 0)
-            cout<<"NULL , "<<s1<<"\n";
-        if(s1.length() == 0 && s2.length() == 0)
-            cout<<"NULL , NULL\n";
-        return;
+        dp[i] = arr[i];
+        for(int j=i-1;j>=0;j--)
+        {
+            if(arr[j] < arr[i])
+                dp[i] = max(dp[i], dp[j] + arr[i]);
+        }
+    }
+}
+void LIS_R2L(vector<int>& arr, vector<int>& dp)
+{
+    int N = arr.size();
+
+    for(int i=N-1;i>=0;i--)
+    {
+        dp[i] = arr[i];
+        for(int j=i+1;j<=N;j++)
+        {
+            if(arr[j] < arr[i])
+                dp[i] = max(dp[i], dp[j] + arr[i]);
+        }
+    }
+}
+
+int maximumSumBiotonicSubsequence(vector<int>& arr)
+{
+    int N = arr.size();
+    
+    vector<int> dp1(N);
+    vector<int> dp2(N);
+
+    LIS_L2R(arr, dp1);
+    LIS_R2L(arr, dp2);
+
+    int maxSum = 0;
+    for(int i=0;i<N;i++)
+    {
+        maxSum = max(maxSum, dp1[i] + dp2[i] - arr[i]);
     }
 
-    cout<< s1 <<" , "<<s2<<"\n";
-    
-    allSubsequence(s1.substr(1), s2.substr(1));
-    
-    allSubsequence(s1.substr(1),s2);
-    allSubsequence(s1,s2.substr(1));
-    
-
+    return maxSum;
 }
 
 void solve()
 {
-    string str1 = "123";
-    string str2 = "456";
-    allSubsequence(str1, str2);
+    
+    vector<int> arr = {47 ,92 ,21 ,117 ,34 ,63 ,51 ,77 ,2 ,106 ,46 ,45 ,88 ,57};
+
+    cout << maximumSumBiotonicSubsequence(arr);
 }
 
 int main()

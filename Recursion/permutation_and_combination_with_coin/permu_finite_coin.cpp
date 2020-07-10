@@ -51,7 +51,7 @@ int main()
     vector<int> arr = {2,3,5,7};
     int total = 10;
     vector<int> visited(4,0);
-    //cout<<finiteCoinCombination(arr,total,"",visited);
+    // cout<<finiteCoinPermutation(arr,total,"",visited);
     cout<<finiteCoinPermutation1(arr,total,"",0);
 
 }
