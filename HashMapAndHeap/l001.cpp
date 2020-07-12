@@ -30,7 +30,20 @@ int size(vector<int>& arr, int idx)
 class Heap{
 
     vector<int> arr;
+    bool isMaxHeap = true;
+
     public: 
+        bool compareTo(int x, int y){
+            if(isMaxHeap)
+            {
+                return arr[x] > arr[y];     // this - other  -> defualt
+            }
+            else
+            {
+                return arr[x] < arr[y];      // other - this
+            }
+            
+        }
         void swap(int si, int ei)
         {
             int temp = arr[si];
@@ -44,10 +57,10 @@ class Heap{
             int ri = 2 * pi + 2;
             int maxIdx = pi;
 
-            if(li < n && arr[li] > arr[maxIdx])
+            if(li < n && compareTo(li, maxIdx))
                 maxIdx = li;
             
-            if(ri < n && arr[ri] > arr[maxIdx])
+            if(ri < n && compareTo(ri, maxIdx))
                 maxIdx = ri;
 
             if(pi != maxIdx)
@@ -63,13 +76,30 @@ class Heap{
             int pi = (ci - 1) / 2;
             int minIdx = ci;
 
-            if(pi >= 0 && arr[pi] < arr[minIdx])
+            if(pi >= 0 && compareTo(minIdx, pi))
                 minIdx = pi;
 
             if(minIdx != ci)
             {
                 swap(minIdx, ci);
                 upHeapify(minIdx);
+            }
+        }
+
+        Heap(vector<int>& temp, bool isMaxHeap)
+        {
+            this->isMaxHeap = isMaxHeap;
+            for(int ele : temp)
+            {
+                arr.push_back(ele);
+            }
+            
+            int n = arr.size();
+
+            // Creation of Heap which guarantee that at root(top) we get maximum element
+            for(int i=n-1;i>=0;i--)  // O(nlogn) -> O(2n)
+            {
+                downHeapify(i, n);
             }
         }
 
@@ -87,13 +117,12 @@ class Heap{
             {
                 downHeapify(i, n);
             }
-
-            // for(int i=0;i<n;i++)
-            // {
-            //     cout << arr[i] << " ";
-            // }
         }
 
+        Heap()
+        {
+            arr.clear();
+        }
 
         // User Function. =============================
 
@@ -118,7 +147,7 @@ class Heap{
         void pop()  // O(logn)
         {
             if(arr.size() == 0)
-                return -1;
+                return;
             swap(0, arr.size()-1);
             arr.pop_back();
             downHeapify(0, arr.size());
@@ -136,7 +165,7 @@ void solve()
     vector<int> arr{10,20,30,-2,-3,-4,5,6,7,8,9,22,11,13};
     // cout << height(arr, 0);
     // cout << size(arr, 0);
-    Heap pq(arr);
+    Heap pq;
     pq.add(100);
     pq.add(25);
 
