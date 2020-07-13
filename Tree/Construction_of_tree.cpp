@@ -192,7 +192,7 @@ vector<Node*> rootToNodePath_03(Node* node, int data)
         return res;
     }
 
-    res = rootToNodePath_02(node->left, data); //In JAVA: O(1) & C++: O(1)
+    res = rootToNodePath_02(node->left, data); //In JAVA: O(1) & C++: O(N)
     if(res.size() != 0)
     {
         res.push_back(node);
