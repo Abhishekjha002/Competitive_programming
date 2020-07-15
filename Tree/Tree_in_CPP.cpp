@@ -563,11 +563,83 @@ void boundaryView(Node* root){
 
     for(Node* n : arr3)
         cout<<n->data<<" ";
+}
+
+int min_ = 0;
+void widthDiag(Node* root, int lvl){
     
+    if(root == nullptr)
+        return;
+    
+    min_ = min(min_, lvl);
+
+    widthDiag(root->lrft, lvl-1);
+    widthDiag(root->lrft, lvl);
+}
+
+void diagnalView(Node* root){
+
+    widthDiag(root, 0);
+    int size = -min_ + 1;
+    vector<vector<int>> arr(size, vector<int>());
+
+    queue<pair<Node*, int>> que;
+    que.push({root,-minIdx});
+
+    while(que.size() != 0)
+    {
+        int size = que.size();
+        while(size-->0)
+        {
+            pair<Node*, int> rvtx = que.front();
+            que.pop();
+            arr[rvtx.second].push_back(rvtx.first->data);
+            if(rvtx.first->left != nullptr)
+                que.push({rvtx.first->left, rvtx.second-1});
+            if(rvtx.first->right != nullptr)
+                que.push({rvtx.first->right, rvtx.second});
+        }
+    }
+
+    for(vector<int>& v : arr)
+    {
+        for(int ele : v)
+            cout<<ele<<" ";
+        cout<<"\n";
+    }
 
 }
 
+void diagnalSum(Node* root){
 
+    width(root, 0);
+    int size = -minIdx + 1;
+    vector<int> arr(size,0);
+
+    queue<pair<Node*, int>> que;
+    que.push({root,-minIdx});
+
+    while(que.size() != 0)
+    {
+        int size = que.size();
+        while(size-->0)
+        {
+            pair<Node*, int> rvtx = que.front();
+            que.pop();
+            arr[rvtx.second]+=(rvtx.first->data);
+            if(rvtx.first->left != nullptr)
+                que.push({rvtx.first->left, rvtx.second-1});
+            if(rvtx.first->right != nullptr)
+                que.push({rvtx.first->right, rvtx.second});
+        }
+    }
+
+    for(int v : arr)
+    {
+        cout<<v<<" ";
+    }
+
+}
 
 void view(Node* root)
 {
@@ -577,7 +649,9 @@ void view(Node* root)
     // verticalOrderSum(root);
     // bottomView(root);
     // topView(root);
-    boundaryView(root);
+    // boundaryView(root);
+    // diagnalView(root);
+    diagnalSum(root);
 }
 
 void rootToNodePath(Node* root)
