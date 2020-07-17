@@ -76,6 +76,76 @@ vector<vector<int>> verticalTraversal(TreeNode* root) {
 }
 
 
+struct TreeNode {
+      int val;
+      TreeNode *left;
+      TreeNode *right;
+      TreeNode() : val(0), left(nullptr), right(nullptr) {}
+      TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+      TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
 
+// Leetcode : 98. ============================================
+
+long long int z = -1e12;
+bool isValidBST(TreeNode* root) {
+    
+    if(root == nullptr)
+        return true;
+    
+    if(!isValidBST(root->left))
+        return false;
+    
+    if(z >= root->val)
+        return false;
+    z = root->val;
+    
+    if(!isValidBST(root->right))
+        return false;
+    
+    return true;
+}
+
+// leetcode : 99. Recover Binary Search Tree. ===============================================
+
+TreeNode* a = nullptr;
+TreeNode* b = nullptr;
+TreeNode* c = nullptr;
+
+bool recoverTree_(TreeNode* root) {
+
+    if(root == nullptr)
+        return false;
+
+    if(recoverTree_(root->left))
+        return true;
+
+    if(c != nullptr && c->val > root->val){
+        b = root;
+        if(a == nullptr)
+            a = c;
+        else
+            return true;
+    }
+
+    c = root;
+
+    if(recoverTree_(root->right))
+        return true;
+
+    return false;
+}
+
+void recoverTree(TreeNode* root) {
+        
+    recoverTree_(root);
+    if(a != nullptr)
+    {
+        int temp = a->val;
+        a->val = b->val;
+        b->val = temp;
+    }
+
+}
 
 

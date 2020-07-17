@@ -565,22 +565,10 @@ void boundaryView(Node* root){
         cout<<n->data<<" ";
 }
 
-int min_ = 0;
-void widthDiag(Node* root, int lvl){
-    
-    if(root == nullptr)
-        return;
-    
-    min_ = min(min_, lvl);
-
-    widthDiag(root->lrft, lvl-1);
-    widthDiag(root->lrft, lvl);
-}
-
 void diagnalView(Node* root){
 
-    widthDiag(root, 0);
-    int size = -min_ + 1;
+    width(root, 0);
+    int size = -minIdx + 1;
     vector<vector<int>> arr(size, vector<int>());
 
     queue<pair<Node*, int>> que;
@@ -641,6 +629,86 @@ void diagnalSum(Node* root){
 
 }
 
+// Convert a Binary Tree into Doubly Linked List -> Inorder
+Node* DLLhead = nullptr;
+Node* DLLprev = nullptr;
+
+void DLL(Node* node)
+{
+    if(node == nullptr)
+        return;
+    
+    DLL(node->left);
+    if(DLLhead == nullptr){
+        DLLhead = node;
+    }else{
+        DLLprev->right = node;
+        node->left = DLLprev;
+    }
+    DLLprev = node;
+    DLL(node->right);
+
+}
+
+void set2(Node* node){
+    DLL(node);
+    while(DLLhead!=nullptr){
+        cout<<DLLhead->data<<" ";
+        DLLhead = DLLhead->right;
+    }
+}
+
+class allSolution{
+
+    public:
+        int size = 0;
+        int height = 0;
+        bool find = false;
+
+        Node* prec = nullptr;
+        Node* succ = nullptr;
+        Node* prev = nullptr;
+
+};
+
+
+void allSol(Node* root, int level, int data, allSolution pair)
+{
+    if(root == nullptr)
+        return;
+    
+    // pair.size++;
+    // pair.height = max(pair.height, level);
+    // pair.find = pair.find || (data == root->data);cout<<"hi";
+
+
+    if(root->data == data && pair.prec == nullptr)
+    {
+        pair.prec = pair.prev;
+        cout<<"Pred : "<<pair.prec->data<<"\n";
+    }
+
+    if(pair.prev != nullptr && pair.prev->data == data && pair.succ == nullptr)
+    {
+        pair.succ = root;
+        cout<<"Succ :" << pair.succ->data<<"\n";
+    }
+
+    pair.prev = root;
+    allSol(root->left, level + 1, data, pair);
+    allSol(root->right, level + 1, data, pair);
+}
+
+
+void solution(Node* root){
+
+    cout<<"hi";
+    allSolution pair;
+    allSol(root, 0, 60, pair);
+    cout<<pair.succ->data<<" ";
+
+}
+
 void view(Node* root)
 {
     // leftView(root);
@@ -685,15 +753,17 @@ void Basic(Node* root)
 
 void solve()
 {
-    // vector<int> arr = {10, 20, 40, -1, -1, 50, 80, -1, -1, 90, -1, -1, 30, 60, 100, -1, -1, -1, 70, 110, -1, -1, 120, -1, -1};
-    vector<int> arr = {11,6,4,-1,5,-1,-1,8,-1,10,-1,-1,19,17,-1,-1,43,31,-1,-1,49,-1,-1};
+    vector<int> arr = {10, 20, 40, -1, -1, 50, 80, -1, -1, 90, -1, -1, 30, 60, 100, -1, -1, -1, 70, 110, -1, -1, 120, -1, -1};
+    // vector<int> arr = {11,6,4,-1,5,-1,-1,8,-1,10,-1,-1,19,17,-1,-1,43,31,-1,-1,49,-1,-1};
     Node* root = constructTree(arr);
     // cout << idx;
     // Basic(root);
     // Traversal(root);
     // rootToNodePath(root);
     // levelOrder(root);
-    view(root);
+    // view(root);
+    // set2(root);
+    solution(root);
 }
 
 int main()
