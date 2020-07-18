@@ -143,6 +143,165 @@ void allNodesInRange_01(Node* root, int a, int b, vector<int>& arr){
 
 }
 
+void predAndSucc(Node* root, int data)
+{
+    Node* curr = root;
+    Node* pred = nullptr;
+    Node* succ = nullptr;
+
+    while(curr != nullptr)
+    {
+        if(curr->data == data){
+            if(curr->left == nullptr)
+                cout<<"Pred : "<<((pred==nullptr) ? -1 : pred->data); 
+            else
+            {
+                pred = curr->left;
+                while(pred->right != nullptr)
+                    pred = pred->right;
+                cout<<"Pred : "<<pred->data;
+            }
+
+            if(curr->right == nullptr)
+                cout<<"Succ : "<<((succ==nullptr) ? -1 : succ->data); 
+            else
+            {
+                succ = curr->right;
+                while(succ->left != nullptr)
+                    succ = succ->left;
+                cout<<"Succ : "<<succ->data;
+            }   
+            break;
+        }
+        else if(curr->data > data)
+        {
+            succ = curr;
+            curr = curr->left;
+        }
+        else if(curr->data < data)
+        {
+            pred = curr;
+            curr = curr->right;
+        }
+
+    }
+
+}
+
+// Construct Binary Tree from PreOrder. - > O(N) ==========================================
+
+int idx = 0;
+Node* constructBSTfromPreOrder(vector<int>& arr, int lb, int ele, int rb)
+{
+    if(idx == arr.size() || ele < lb || ele > rb)
+        return nullptr;
+    
+    Node* root = new Node(ele);
+    idx++;
+
+    if(idx != arr.size())
+        root->left = constructBSTfromPreOrder(arr, lb, arr[idx], root->data);
+    if(idx != arr.size())
+        root->right = constructBSTfromPreOrder(arr, root->data, arr[idx], rb);
+
+    return root;
+}
+
+Node* constructBSTfromPreOrder(vector<int>& arr, int lb, int rb)
+{
+    if(idx == arr.size() || arr[idx] < lb || arr[idx] > rb)
+        return nullptr;
+
+    Node* root = new Node(arr[idx]);
+    idx++;
+
+    root->left = constructBSTfromPreOrder(arr, lb, root->data);
+    root->right = constructBSTfromPreOrder(arr, root->data, rb);
+
+    return root;
+}
+
+
+int height(vector<int>& arr, int lb, int ele, int rb){
+    if(idx == arr.size() || ele < lb || ele > rb)
+        return -1;
+    
+    Node* root = new Node(ele);
+    idx++;
+    int lh, rh;
+
+    if(idx != arr.size())
+        lh = height(arr, lb, arr[idx], root->data);
+    if(idx != arr.size())
+        rh = height(arr, root->data, arr[idx], rb);
+
+    return max(lh, rh) + 1;
+}
+
+void constructBSTfromPreOrder(vector<int>& arr){
+    // Node* root = constructBSTfromPreOrder(arr, -1e8, arr[0], 1e8);
+    Node* root = constructBSTfromPreOrder(arr, -1e8, 1e8);
+    display(root); 
+    idx = 0;
+    cout<<height(arr, -1e8, arr[0], 1e8);
+}
+
+// Addition and Deletion in BST. =============================================================================
+// Leetcode : 701.
+Node* addData(Node* root, int data)
+{
+    if(root == nullptr)
+        return new Node(data);
+
+    if(root->data > data)
+    {
+        root->left = addData(root->left, data);
+    }
+    else
+    {
+        root->right = addData(root->right, data);    
+    }
+
+}
+
+// Leetcode : 450.
+Node* removeData(Node* root, int data)
+{
+    if(root == nullptr)
+        return nullptr;
+    
+    if(root->data > data)
+    {
+        root->left = removeData(root->left, data);
+    }
+    else if(root->data < data)
+    {
+        root->right = removeData(root->right, data);
+    }
+    else  // Node is Found;
+    {
+        if(root->left == nullptr || root->right == nullptr)
+            return root->left != nullptr ? root->left : root->right;
+
+        int maxiInLeft = maximum(root->left);
+        root->data = maxiInLeft;
+        root->left = removeData(root->left, maxiInLeft);
+
+    }
+    
+}
+
+
+void InsertionAndDeletion(Node* root)
+{
+    int data = 75;
+    Node* node = addData(root, data);
+    display(node);
+    cout<<"\n";
+    Node* node1 = removeData(node, data);
+    display(node1);
+}
+
 
 void basic(Node* root){
     // cout<<height(root);
@@ -157,10 +316,14 @@ void solve(){
 
     vector<int> arr = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120};
 
+    // vector<int> arr = {60,30,10,20,40,50,90,70,80,110,100,120};
     Node* root = constructBST(arr,0,arr.size() -1);
 
     // display(root);
-    basic(root);
+    // basic(root);
+    // predAndSucc(root, 90);
+    // constructBSTfromPreOrder(arr);
+    InsertionAndDeletion(root);
 
 }
 
@@ -171,3 +334,10 @@ int main()
     solve();
     return 0;
 }
+
+
+
+
+
+
+
