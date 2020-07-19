@@ -38,7 +38,7 @@ void updateHeightAndBalance(Node* node){ // O(1)
     node->bal = lh - rh;
 }
 
-Node* constructBST(vector<int>& arr, int si, int ei){
+Node* constructBST(vector<int>& arr, int si, int ei){ // O(N)
     
     if(si > ei)
         return nullptr;
@@ -96,7 +96,7 @@ Node* rr(Node* A){  // O(1)
     updateHeightAndBalance(B);    
 }
 
-Node* getRotation(Node* node)
+Node* getRotation(Node* node)  // O(1);
 {
     updateHeightAndBalance(node);
     if(node->bal == 2)  // ll or lr
@@ -127,7 +127,7 @@ Node* getRotation(Node* node)
     return node;
 }
 
-Node* addData(Node* root, int data)
+Node* addData(Node* root, int data) // O(logN)
 {
     if(root == nullptr)
         return new Node(data);
@@ -152,7 +152,7 @@ int maximum(Node *node) // O(logn)
     return curr->data;
 }
 
-Node* removeData(Node* root, int data)
+Node* removeData(Node* root, int data) // O(logN)
 {
     if(root == nullptr)
         return nullptr;
