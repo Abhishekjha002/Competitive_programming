@@ -262,6 +262,7 @@ Node* addData(Node* root, int data)
         root->right = addData(root->right, data);    
     }
 
+    return root;
 }
 
 // Leetcode : 450.
@@ -288,6 +289,8 @@ Node* removeData(Node* root, int data)
         root->left = removeData(root->left, maxiInLeft);
 
     }
+
+    return root;
     
 }
 
