@@ -1574,6 +1574,79 @@ int minDeletion(vector<int> &arr)
     return n - oMax;
 }
 
+//Leetcode : 354. Russian Doll Envelopes
+
+int maxEnvelopes(vector<vector<int>>& arr) {
+        
+    sort(arr.begin(), arr.end(), [](vector<int>& a, vector<int>& b){
+        if(a[0] == b[0])
+            return b[1] < a[1];   // other - this
+        
+        return a[0] < b[0];       // this - other
+    });
+
+    int n = arr.size();
+    int oMax = 0;
+    vector<int> dp(n,0);
+
+    for(int i=0;i<n;i++)
+    {
+        dp[i] = 1;
+        for(int j=i-1;j>=0;j--)
+        {
+            if(arr[j][1] < arr[i][1])
+                dp[i] = max(dp[i], dp[j] + 1);
+        }
+
+        oMax = max(oMax, dp[i]);
+    }
+    
+    return oMax;
+}
+
+// Leetcode : 673. Number of Longest Increasing Subsequence
+
+int findNumberOfLIS(vector<int>& arr) {
+
+    int n = arr.size();
+    vector<int> dp(n,0);
+    vector<int> count(n,0);
+
+    int maxLen = 0;
+    int countLen = 0;
+
+    for(int i=0;i<n;i++)
+    {
+        dp[i] = 1;
+        count[i] = 1;
+        for(int j=i-1;j>=0;j--)
+        {
+            if(arr[i] > arr[j])
+            {
+                if(dp[j] + 1 > dp[i])
+                {
+                    dp[i] = dp[j] + 1;
+                    count[i] = count[j];
+                }
+                else if(dp[j] + 1 == dp[i])
+                    count[i] += count[j];
+            }
+        }
+
+        if(dp[i] > maxLen)
+        {
+            maxLen = dp[i];
+            countLen = count[i]; 
+        }
+        else if(dp[i] == maxLen)
+            countLen += count[i];
+    
+    }    
+    
+    return countLen;       
+}
+
+
 
 
 
